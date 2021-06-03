@@ -40,11 +40,10 @@ fn parse_url(request: &str) -> Vec<&str> {
 }
 
 /// 处理tcp连接
-pub fn connect_handler(stream: TcpStream, config: Config) {
+pub fn connect_handler(stream: TcpStream, config: Config) -> Result<(), std::io::Error> {
     let mut req_string = String::new();
     let mut buf = BufStream::new(stream);
-    // todo 读取流可能触发IO错误
-    buf.read_line(&mut req_string).unwrap();
+    buf.read_line(&mut req_string)?;
     let req_type = parse_url(&req_string)[0];
     let mut request_path = parse_url(&req_string)[1];
     println!("request url: {},config: {:?}", request_path, config);
@@ -58,7 +57,8 @@ pub fn connect_handler(stream: TcpStream, config: Config) {
                 }
             }
             if is_allowed(request_path, &config.allow_folders) {
-                if is_allowed_file_type(request_path, &config.allow_file_types) {
+                let allow_file_type = is_allowed_file_type(request_path, &config.allow_file_types);
+                if let Ok(allow_file_type) = allow_file_type {
                     read_file(request_path)
                 } else {
                     // todo 不允许的文件类型
@@ -80,6 +80,8 @@ pub fn connect_handler(stream: TcpStream, config: Config) {
         "PUT" => {}
         _ => {}
     }
+
+    Ok(())
 }
 
 /// 是否是允许路径
@@ -93,24 +95,24 @@ fn is_allowed(request_path: &str, allow_array: &Vec<String>) -> bool {
 }
 
 /// 是否是允许的静态文件类型
-fn is_allowed_file_type(file_path: &str, allow_file_types: &Vec<String>) -> bool {
+fn is_allowed_file_type(file_path: &str, allow_file_types: &Vec<String>) -> Result<bool, ()> {
     // 若不填写允许静态文件类型,允许所有文件类型
     if allow_file_types.len() == 0 {
-        return true;
+        return Ok(true);
     }
-    let _path = Path::new(file_path);
-    let file_name = _path.file_name();
+    let file_type = Path::new(file_path)
+        .file_name()
+        .ok_or_else(|| {})?
+        .to_str()
+        .ok_or_else(|| {})?;
 
-    if let Some(file_name) = file_name {
-        if let Some(file_type) = file_name.to_str() {
-            for allow_file_type in allow_file_types.iter() {
-                if allow_file_type == file_type {
-                    return true;
-                }
-            }
+    for allow_file_type in allow_file_types.iter() {
+        if allow_file_type == file_type {
+            return Ok(true);
         }
     }
-    false
+
+    Ok(false)
 }
 
 /// 读取文件
