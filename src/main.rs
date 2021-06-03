@@ -8,7 +8,9 @@ fn main() -> std::io::Result<()> {
         let listener = TcpListener::bind(ip_port)?;
         for stream in listener.incoming() {
             match stream {
-                Ok(s) => utils::connect_handler(s, config.clone()),
+                Ok(s) => {
+                    utils::connect_handler(s, config.clone())?;
+                }
                 _ => {
                     println!("error stream")
                 }

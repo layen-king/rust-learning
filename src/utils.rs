@@ -59,7 +59,9 @@ pub fn connect_handler(stream: TcpStream, config: Config) -> Result<(), std::io:
             if is_allowed(request_path, &config.allow_folders) {
                 let allow_file_type = is_allowed_file_type(request_path, &config.allow_file_types);
                 if let Ok(allow_file_type) = allow_file_type {
-                    read_file(request_path)
+                    if allow_file_type {
+                        read_file(request_path)
+                    }
                 } else {
                     // todo 不允许的文件类型
                 }
