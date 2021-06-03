@@ -1,7 +1,14 @@
 {
   "ip": "127.0.0.1",
   "port": "3303",
-  "root_dir":"/index.html",
+  "allow_folders": [
+    "/static/"
+  ],
+  "allow_apis": [
+    "/api/"
+  ],
+  "allow_file_types":[],
+  "root_dir": "/static/index.html",
   "index": [
     "/index",
     "/index.html",
