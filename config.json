@@ -1,0 +1,10 @@
+{
+  "ip": "127.0.0.1",
+  "port": "3303",
+  "root_dir":"/index.html",
+  "index": [
+    "/index",
+    "/index.html",
+    "/"
+  ]
+}
