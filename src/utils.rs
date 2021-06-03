@@ -60,14 +60,14 @@ pub fn connect_handler(stream: TcpStream, config: Config) {
             if is_allowed(request_path, &config.allow_folders) {
                 if is_allowed_file_type(request_path, &config.allow_file_types) {
                     read_file(request_path)
-                }else{
+                } else {
                     // todo 不允许的文件类型
                 }
             } else {
                 if is_allowed(request_path, &config.allow_apis) {
                     // todo 调用api
                     println!("transfer api")
-                }else{
+                } else {
                     // todo 返回404
                     println!("404")
                 }
@@ -82,7 +82,7 @@ pub fn connect_handler(stream: TcpStream, config: Config) {
     }
 }
 
-/// 是否允许
+/// 是否是允许路径
 fn is_allowed(request_path: &str, allow_array: &Vec<String>) -> bool {
     for allow in allow_array.iter() {
         if request_path.starts_with(allow) {
