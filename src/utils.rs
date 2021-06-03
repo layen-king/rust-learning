@@ -48,7 +48,9 @@ pub fn connect_handler(stream: TcpStream, config: Config) {
             }
             read_file(file_path);
         }
-        "POST" => {}
+        "POST" => {
+            // 执行控制器函数
+        }
         "DELETE" => {}
         "PUT" => {}
         _ => {}
