@@ -105,8 +105,7 @@ fn is_allowed_file_type(file_path: &str, allow_file_types: &Vec<String>) -> bool
         if let Some(file_type) = file_name.to_str() {
             for allow_file_type in allow_file_types.iter() {
                 if allow_file_type == file_type {
-                    true;
-                    break;
+                    return true;
                 }
             }
         }
