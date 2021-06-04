@@ -7,13 +7,10 @@ fn main() -> std::io::Result<()> {
         let ip_port = format!("{}:{}", config.ip, config.port);
         let listener = TcpListener::bind(ip_port)?;
         for stream in listener.incoming() {
-            match stream {
-                Ok(s) => {
-                    utils::connect_handler(s, config.clone())?;
-                }
-                _ => {
-                    println!("error stream")
-                }
+            if let Ok(stream) = stream {
+                utils::connect_handler(stream, config.clone())?;
+            } else {
+                println!("error stream")
             }
         }
     }

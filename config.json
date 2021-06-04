@@ -1,14 +1,16 @@
 {
   "ip": "127.0.0.1",
   "port": "3303",
+  "root_dir": ".",
+  "root_file": "/static/index.html",
   "allow_folders": [
-    "/static/"
+    "/static/",
+    "/favicon.ico"
   ],
   "allow_apis": [
     "/api/"
   ],
-  "allow_file_types":[],
-  "root_dir": "/static/index.html",
+  "allow_file_types": [],
   "index": [
     "/index",
     "/index.html",

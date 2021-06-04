@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
 //use serde_json::Result;
-use bufstream::BufStream;
+use std::io::Write;
+use std::net::TcpStream;
 use std::path::Path;
 use std::{fs::File, io::Read};
-use std::{io::BufRead, net::TcpStream};
 
 /// 配置项结构体
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -13,9 +13,11 @@ pub struct Config {
     /// 监听的端口号,3303
     pub port: String,
     /// 主页文件
-    pub root_dir: String,
+    pub root_file: String,
     /// 主页路由
     pub index: Vec<String>,
+    /// 根路径
+    pub root_dir: String,
     /// 允许的访问静态文件夹
     pub allow_folders: Vec<String>,
     /// 允许的静态文件类型
@@ -34,44 +36,52 @@ pub fn read_config() -> Result<Config, std::io::Error> {
 
 /// 解析tcp请求,获取请求地址
 fn parse_url(request: &str) -> Vec<&str> {
-    let v: Vec<&str> = request.split(' ').collect();
-    println!("request: {:?}", v);
+    let mut v: Vec<&str> = request.split(' ').collect();
+    // println!("request: {:?}", v);
+    if v.len() < 2 {
+        for _ in v.len()..2 {
+            v.push("")
+        }
+    }
     v
 }
 
 /// 处理tcp连接
-pub fn connect_handler(stream: TcpStream, config: Config) -> Result<(), std::io::Error> {
-    let mut req_string = String::new();
-    let mut buf = BufStream::new(stream);
-    buf.read_line(&mut req_string)?;
+pub fn connect_handler(mut stream: TcpStream, config: Config) -> Result<(), std::io::Error> {
+    let mut buffer = [0; 1024];
+    stream.read(&mut buffer)?;
+    let req_string = String::from_utf8_lossy(&buffer[..]);
     let req_type = parse_url(&req_string)[0];
-    let mut request_path = parse_url(&req_string)[1];
-    println!("request url: {},config: {:?}", request_path, config);
+    let mut req_path = parse_url(&req_string)[1];
+    println!("request url: {},type: {:?}", req_path, req_type);
     match req_type {
         "GET" => {
-            // 若在请求地址在配置项index字段内,直接读取root_dir文件
+            // 若在请求地址在配置项index字段内,直接读取root_file文件
             for url in config.index.iter() {
-                if url == request_path {
-                    request_path = &config.root_dir;
+                if url == req_path {
+                    req_path = &config.root_file;
                     break;
                 }
             }
-            if is_allowed(request_path, &config.allow_folders) {
-                let allow_file_type = is_allowed_file_type(request_path, &config.allow_file_types);
-                if let Ok(allow_file_type) = allow_file_type {
-                    if allow_file_type {
-                        read_file(request_path)
-                    }
-                } else {
-                    // todo 不允许的文件类型
-                }
+            if is_allowed(req_path, &config.allow_folders) {
+                let content = read_file(config.root_dir, req_path);
+                println!("content is {}", content);
+                stream.write(content.as_bytes())?;
+                stream.flush()?;
             } else {
-                if is_allowed(request_path, &config.allow_apis) {
+                if is_allowed(req_path, &config.allow_apis) {
                     // todo 调用api
                     println!("transfer api")
                 } else {
-                    // todo 返回404
-                    println!("404")
+                    let content = String::from("禁止访问此资源");
+                    // 不允许的文件类型
+                    let response = format!(
+                        "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
+                        content.len(),
+                        content
+                    );
+                    stream.write(response.as_bytes())?;
+                    stream.flush()?;
                 }
             }
         }
@@ -87,9 +97,12 @@ pub fn connect_handler(stream: TcpStream, config: Config) -> Result<(), std::io:
 }
 
 /// 是否是允许路径
-fn is_allowed(request_path: &str, allow_array: &Vec<String>) -> bool {
+fn is_allowed(req_path: &str, allow_array: &Vec<String>) -> bool {
+    if allow_array.is_empty() {
+        return true;
+    }
     for allow in allow_array.iter() {
-        if request_path.starts_with(allow) {
+        if req_path.starts_with(allow) {
             return true;
         }
     }
@@ -97,9 +110,10 @@ fn is_allowed(request_path: &str, allow_array: &Vec<String>) -> bool {
 }
 
 /// 是否是允许的静态文件类型
+#[allow(dead_code)]
 fn is_allowed_file_type(file_path: &str, allow_file_types: &Vec<String>) -> Result<bool, ()> {
     // 若不填写允许静态文件类型,允许所有文件类型
-    if allow_file_types.len() == 0 {
+    if allow_file_types.is_empty() {
         return Ok(true);
     }
     let file_type = Path::new(file_path)
@@ -117,7 +131,25 @@ fn is_allowed_file_type(file_path: &str, allow_file_types: &Vec<String>) -> Resu
     Ok(false)
 }
 
-/// 读取文件
-fn read_file(path: &str) {
-    println!("read file {}", path)
+/// 读取文件,返回文件串.若文件不存在,返回String
+fn read_file(root_dir: String, path: &str) -> String {
+    println!("read file {}", path);
+    if let Ok(mut file) = File::open(format!("{}{}", root_dir, path)) {
+        let mut file_content = String::new();
+        // todo 若文件过大,使用文件流发送
+        file.read_to_string(&mut file_content).ok();
+        // todo 根据请求类型,生成内容
+        format!(
+            "HTTP/1.1 200 OK\r\nContent-Length: {}\r\n\r\n{}",
+            file_content.len(),
+            file_content
+        )
+    } else {
+        let file_content = String::from("404 NotFound");
+        format!(
+            "HTTP/1.1 404 NotFound\r\nContent-Length: {}\r\n\r\n{}",
+            file_content.len(),
+            file_content
+        )
+    }
 }
