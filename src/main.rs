@@ -1,4 +1,6 @@
 mod utils;
+mod cache;
+mod mime_type;
 use std::net::TcpListener;
 
 fn main() -> std::io::Result<()> {
