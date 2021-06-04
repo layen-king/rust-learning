@@ -3,6 +3,7 @@
   "port": "3303",
   "root_dir": ".",
   "root_file": "/static/index.html",
+  "cache": true,
   "allow_folders": [
     "/static/",
     "/favicon.ico"

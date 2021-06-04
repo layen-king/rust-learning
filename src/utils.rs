@@ -1,38 +1,10 @@
-use serde::{Deserialize, Serialize};
 //use serde_json::Result;
 use std::io::Write;
 use std::net::TcpStream;
 use std::path::Path;
 use std::{fs::File, io::Read};
 
-/// 配置项结构体
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Config {
-    /// 配置的ip,127.0.0.1
-    pub ip: String,
-    /// 监听的端口号,3303
-    pub port: String,
-    /// 主页文件
-    pub root_file: String,
-    /// 主页路由
-    pub index: Vec<String>,
-    /// 根路径
-    pub root_dir: String,
-    /// 允许的访问静态文件夹
-    pub allow_folders: Vec<String>,
-    /// 允许的静态文件类型
-    pub allow_file_types: Vec<String>,
-    /// 允许访问api
-    pub allow_apis: Vec<String>,
-}
-/// 读取配置文件
-pub fn read_config() -> Result<Config, std::io::Error> {
-    let mut file_str = String::new();
-    File::open("./config.json")?.read_to_string(&mut file_str)?;
-    let config: Config = serde_json::from_str(&file_str)?;
-    println!("config: {:?}", config);
-    Ok(config)
-}
+use crate::read_config::Config;
 
 /// 解析tcp请求,获取请求地址
 fn parse_url(request: &str) -> Vec<&str> {
@@ -47,7 +19,7 @@ fn parse_url(request: &str) -> Vec<&str> {
 }
 
 /// 处理tcp连接
-pub fn connect_handler(mut stream: TcpStream, config: Config) -> Result<(), std::io::Error> {
+pub fn connect_handler(mut stream: TcpStream, config: &Config) -> Result<(), std::io::Error> {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer)?;
     let req_string = String::from_utf8_lossy(&buffer[..]);
@@ -64,7 +36,7 @@ pub fn connect_handler(mut stream: TcpStream, config: Config) -> Result<(), std:
                 }
             }
             if is_allowed(req_path, &config.allow_folders) {
-                let content = read_file(config.root_dir, req_path);
+                let content = read_file(&config.root_dir, req_path);
                 println!("content is {}", content);
                 stream.write(content.as_bytes())?;
                 stream.flush()?;
@@ -132,7 +104,7 @@ fn is_allowed_file_type(file_path: &str, allow_file_types: &Vec<String>) -> Resu
 }
 
 /// 读取文件,返回文件串.若文件不存在,返回String
-fn read_file(root_dir: String, path: &str) -> String {
+fn read_file(root_dir: &str, path: &str) -> String {
     println!("read file {}", path);
     if let Ok(mut file) = File::open(format!("{}{}", root_dir, path)) {
         let mut file_content = String::new();
