@@ -10,7 +10,6 @@ pub struct Cache {
     pub has_cache: bool,
 }
 
-#[allow(dead_code)]
 impl Cache {
     pub fn new(file_map: HashMap<String, String>, has_cache: bool) -> Cache {
         Cache {
@@ -22,7 +21,9 @@ impl Cache {
     pub fn make_response(&mut self, path: &str) -> String {
         if self.has_cache {
             let get_file = self.file_map.get(path);
+            println!("cache is {:?}", &self.file_map);
             if let Some(file) = get_file {
+                println!("get cache:{}", file);
                 return String::from(file);
             } else {
                 let response = self.read_file(path);
