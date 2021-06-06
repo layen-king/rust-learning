@@ -31,10 +31,9 @@ impl Cache {
                 self.file_map.insert(String::from(path), response);
                 return _r;
             }
-        } else {
-            let response = self.read_file(path);
-            return response;
         }
+        let response = self.read_file(path);
+        return response;
     }
     /// 读取文件
     fn read_file(&self, path: &str) -> String {

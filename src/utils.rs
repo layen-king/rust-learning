@@ -4,7 +4,7 @@ use std::io::Write;
 use std::net::TcpStream;
 use std::path::Path;
 
-use crate::cache;
+use crate::file_process;
 use crate::read_config::Config;
 
 /// 解析tcp请求,获取请求地址
@@ -23,7 +23,7 @@ fn parse_url(request: &str) -> Vec<&str> {
 pub fn connect_handler(
     mut stream: TcpStream,
     config: &Config,
-    file_process: &mut cache::Cache,
+    file_process: &mut file_process::Cache,
 ) -> Result<(), std::io::Error> {
     let mut buffer = [0; 1024];
     stream.read(&mut buffer)?;
