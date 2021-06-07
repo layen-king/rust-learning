@@ -7,13 +7,22 @@ use std::net::TcpStream;
 pub fn connect_handler(mut stream: TcpStream) {
     println!("stream: {:?}", stream);
     let mut buf = [0; 1024];
-    let _ = stream.read(&mut buf);
+    stream.read(&mut buf).unwrap_or_else(|err| {
+        println!("write error: {}", err);
+        0
+    });
     let req_str = String::from_utf8_lossy(&buf[..]);
     let req_type = paser_req(&req_str)[0];
     let req_url = paser_req(&req_str)[1];
     let content = read_file(req_url);
-    let _ = stream.write(content.as_bytes());
-    let _ = stream.flush();
+    stream.write(content.as_bytes()).unwrap_or_else(|err| {
+        println!("write error: {}", err);
+        0
+    });
+    stream.flush().unwrap_or_else(|err| {
+        println!("flush error: {}", err);
+        ()
+    });
     println!("req_type: {:?}", req_type);
     println!("req_url: {:?}", req_url);
     // println!("content: {:?}", content);

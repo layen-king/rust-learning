@@ -41,7 +41,7 @@ impl ThreadPool {
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-        self.sender.send(Message::NewJob(job)).unwrap();
+        let _ = self.sender.send(Message::NewJob(job));
     }
 }
 
@@ -49,12 +49,12 @@ impl Drop for ThreadPool {
     fn drop(&mut self) {
         println!("关闭所有线");
         for _ in &self.workers {
-            self.sender.send(Message::Terminate).unwrap();
+            let _ = self.sender.send(Message::Terminate);
         }
 
         for worker in &mut self.workers {
             if let Some(thread) = worker.thread.take() {
-                thread.join().unwrap();
+                let _ = thread.join();
             }
         }
     }
