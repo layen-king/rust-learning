@@ -7,27 +7,33 @@ use std::{
     thread,
 };
 
+/// 发送的消息枚举
+enum Message {
+    NewJob(Job),
+    Terminate,
+}
+
 /// 线程池
 #[allow(dead_code)]
-pub struct PoolThread {
+pub struct ThreadPool {
     workers: Vec<WorkerThread>,
-    sender: mpsc::Sender<Job>,
+    sender: mpsc::Sender<Message>,
 }
 
 type WorkerFn = dyn FnOnce() + Send + 'static;
 type Job = Box<WorkerFn>;
 
-impl PoolThread {
-    pub fn new(size: isize) -> PoolThread {
+impl ThreadPool {
+    pub fn new(size: isize) -> ThreadPool {
         assert!(size > 0);
-        let (sender, rx) = mpsc::channel();
+        let (sender, rx) = mpsc::channel::<Message>();
         let rx = Arc::new(Mutex::new(rx));
         let mut workers = vec![];
         for id in 0..size {
             let rx = Arc::clone(&rx);
             workers.push(WorkerThread::new(id, rx))
         }
-        PoolThread { workers, sender }
+        ThreadPool { workers, sender }
     }
     /// 给线程分发函数
     pub fn execute<F: 'static>(&mut self, f: F)
@@ -35,7 +41,22 @@ impl PoolThread {
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-        self.sender.send(job).unwrap();
+        self.sender.send(Message::NewJob(job)).unwrap();
+    }
+}
+
+impl Drop for ThreadPool {
+    fn drop(&mut self) {
+        println!("关闭所有线");
+        for _ in &self.workers {
+            self.sender.send(Message::Terminate).unwrap();
+        }
+
+        for worker in &mut self.workers {
+            if let Some(thread) = worker.thread.take() {
+                thread.join().unwrap();
+            }
+        }
     }
 }
 
@@ -43,18 +64,32 @@ impl PoolThread {
 #[allow(dead_code)]
 struct WorkerThread {
     id: isize,
-    thread: JoinHandle<()>,
+    thread: Option<JoinHandle<()>>,
 }
 
 impl WorkerThread {
-    fn new(id: isize, rx: Arc<Mutex<Receiver<Job>>>) -> WorkerThread {
+    fn new(id: isize, rx: Arc<Mutex<Receiver<Message>>>) -> WorkerThread {
         let thread = thread::spawn(move || loop {
-            let job = rx.lock().unwrap().recv().unwrap();
-            let start = Instant::now();
-            job();
-            let end = Instant::now();
-            println!("线程:{} 执行任务,耗时:{:?}", id, end - start);
+            if let Ok(rx) = rx.lock() {
+                if let Ok(message) = rx.recv() {
+                    let start = Instant::now();
+                    match message {
+                        Message::NewJob(job) => {
+                            job();
+                            let end = Instant::now();
+                            println!("线程:{} 执行任务,耗时:{:?}", id, end - start);
+                        }
+                        Message::Terminate => {
+                            println!("线程终止:{}", id);
+                            break;
+                        }
+                    }
+                }
+            }
         });
-        WorkerThread { id, thread }
+        WorkerThread {
+            id,
+            thread: Some(thread),
+        }
     }
 }
