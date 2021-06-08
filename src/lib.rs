@@ -1,3 +1,5 @@
+mod cache;
+
 use std::sync::mpsc::Receiver;
 use std::sync::Arc;
 use std::thread::JoinHandle;
@@ -14,7 +16,6 @@ enum Message {
 }
 
 /// 线程池
-#[allow(dead_code)]
 pub struct ThreadPool {
     workers: Vec<WorkerThread>,
     sender: mpsc::Sender<Message>,
@@ -41,20 +42,26 @@ impl ThreadPool {
         F: FnOnce() + Send + 'static,
     {
         let job = Box::new(f);
-        let _ = self.sender.send(Message::NewJob(job));
+        self.sender
+            .send(Message::NewJob(job))
+            .unwrap_or_else(|err| println!("send error: {:?}", err))
     }
 }
 
 impl Drop for ThreadPool {
     fn drop(&mut self) {
-        println!("关闭所有线");
+        println!("关闭所有线程");
         for _ in &self.workers {
-            let _ = self.sender.send(Message::Terminate);
+            self.sender
+                .send(Message::Terminate)
+                .unwrap_or_else(|err| println!("send error: {:?}", err))
         }
 
         for worker in &mut self.workers {
             if let Some(thread) = worker.thread.take() {
-                let _ = thread.join();
+                thread.join().unwrap_or_else(|err| {
+                    println!("join thread failed: {:?}", err);
+                })
             }
         }
     }
