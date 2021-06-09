@@ -30,7 +30,12 @@ pub fn handle_connect(mut stream: TcpStream) {
 
 /// 解析请求文件
 fn paser_req(request: &str) -> Vec<&str> {
-    let v: Vec<&str> = request.split(' ').collect();
+    let mut v: Vec<&str> = request.split(' ').collect();
+    if v.len() < 2{
+      for _ in 0..2{
+          v.push(" ");
+      }  
+    }
     v
 }
 
