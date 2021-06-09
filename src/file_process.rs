@@ -4,7 +4,7 @@ use std::io::Write;
 use std::net::TcpStream;
 
 /// 处理流
-pub fn connect_handler(mut stream: TcpStream) {
+pub fn handle_connect(mut stream: TcpStream) {
     println!("stream: {:?}", stream);
     let mut buf = [0; 1024];
     stream.read(&mut buf).unwrap_or_else(|err| {
