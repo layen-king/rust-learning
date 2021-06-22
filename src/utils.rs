@@ -35,17 +35,17 @@ impl Request {
 /// 解析url成一个结构体
 fn parse_url(requst: &str) -> Request {
     let v: Vec<&str> = requst.split("\r\n").collect();
-    let mut map: HashMap<String, String> = HashMap::new();
+    let mut params: HashMap<String, String> = HashMap::new();
     for str in v.iter() {
         if str.contains(":") {
             let str = *str;
             let kv = str.split(":").collect::<Vec<&str>>();
-            map.insert(kv[0].to_owned(), kv[1].to_owned());
+            params.insert(kv[0].to_owned(), kv[1].to_owned());
         }
     }
     println!("v[0] {:?}", v[0]);
     let req = v[0].split_whitespace().collect::<Vec<&str>>();
-    let req = Request::new(req[0].to_string() as Method, req[1].to_string(), map);
+    let req = Request::new(req[0].to_string(), req[1].to_string(), params);
     req
 }
 
