@@ -4,6 +4,7 @@ use std::io::{Read, Result};
 use std::net::TcpStream;
 
 #[derive(Debug)]
+#[allow(dead_code)]
 enum Method {
     GET,
     POST,
@@ -16,13 +17,13 @@ enum Method {
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct Request {
-    method: Method,
+    method: String,
     url: String,
     params: HashMap<String, String>,
 }
 
 impl Request {
-    fn new(method: Method, url: String, params: HashMap<String, String>) -> Request {
+    fn new(method: String, url: String, params: HashMap<String, String>) -> Request {
         Request {
             method,
             url,
