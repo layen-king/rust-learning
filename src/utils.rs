@@ -17,18 +17,30 @@ enum Method {
 #[allow(dead_code)]
 #[derive(Debug)]
 pub struct Request {
-    method: String,
+    method: Method,
     url: String,
     params: HashMap<String, String>,
 }
 
 impl Request {
-    fn new(method: String, url: String, params: HashMap<String, String>) -> Request {
+    fn new(method: Method, url: String, params: HashMap<String, String>) -> Request {
         Request {
             method,
             url,
             params,
         }
+    }
+}
+
+/// 生成一个枚举
+fn make_method(str: &str) -> Method {
+    match str {
+        "GET" => Method::GET,
+        "POST" => Method::POST,
+        "PUT" => Method::PUT,
+        "DELETE" => Method::DELETE,
+        "OPTIONS" => Method::OPTIONS,
+        _ => Method::NULL,
     }
 }
 
@@ -43,9 +55,9 @@ fn parse_url(requst: &str) -> Request {
             params.insert(kv[0].to_owned(), kv[1].to_owned());
         }
     }
-    println!("v[0] {:?}", v[0]);
     let req = v[0].split_whitespace().collect::<Vec<&str>>();
-    let req = Request::new(req[0].to_string(), req[1].to_string(), params);
+    let method = make_method(req[0]);
+    let req = Request::new(method, req[1].to_string(), params);
     req
 }
 
@@ -56,5 +68,23 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     let request = String::from_utf8_lossy(&buf);
     let r = parse_url(&request);
     println!("{:?}", r);
+    match r.method {
+        Method::GET => {
+            read_file(r.url);
+        }
+        Method::POST => {}
+        Method::PUT => {}
+        Method::OPTIONS => {}
+        Method::DELETE => {}
+        _ => {}
+    }
     Ok(())
+}
+
+/// ## 读取文件
+/// #### [file_path]: 文件路径
+/// #### [result]: 返回文件字符串,已经处理错误
+fn read_file(file_path: String) -> String {
+    
+    todo!("")
 }
