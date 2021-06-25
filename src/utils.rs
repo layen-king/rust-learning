@@ -58,7 +58,8 @@ fn parse_url(requst: &str) -> Request {
     }
     let req = v[0].split_whitespace().collect::<Vec<&str>>();
     let method = make_method(req[0]);
-    let req = Request::new(method, req[1].to_string(), params);
+    let url = req.get(1).unwrap_or(&"");
+    let req = Request::new(method, url.to_string(), params);
     req
 }
 
@@ -71,12 +72,7 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     println!("{:?}", r);
     match r.method {
         Method::GET => {
-            let file_content = read_file(&r.url)?;
-            let response = format!(
-                "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
-                file_content.len(),
-                file_content
-            );
+            let response = make_response(&r.url);
             stream.write(response.as_bytes())?;
             stream.flush()?;
         }
@@ -105,4 +101,18 @@ fn read_file(file_path: &str) -> Result<String> {
     let mut file_content = String::new();
     f.read_to_string(&mut file_content)?;
     Ok(file_content)
+}
+
+/// 构造返回文件
+fn make_response(file_path: &str) -> String {
+    let file_content = read_file(file_path);
+    if let Ok(file_content) = file_content {
+        format!(
+            "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
+            file_content.len(),
+            file_content
+        )
+    } else {
+        String::from("HTTP/1.1 404 File not found")
+    }
 }
