@@ -1,4 +1,4 @@
-use std::io::Result;
+use anyhow::Result;
 use std::net::TcpListener;
 mod utils;
 
@@ -7,7 +7,7 @@ fn main() -> Result<()> {
     for stream in listener.incoming() {
         if let Ok(stream) = stream {
             println!("stream : {:?}", stream);
-            utils::handle_connect(stream)?
+            utils::handle_connect(stream)?;
         }
     }
     Ok(())

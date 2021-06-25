@@ -1,6 +1,7 @@
+use anyhow::Result;
 use std::collections::HashMap;
-// use anyhow;
-use std::io::{Read, Result};
+use std::fs::File;
+use std::io::{Read, Write};
 use std::net::TcpStream;
 
 #[derive(Debug)]
@@ -70,7 +71,14 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     println!("{:?}", r);
     match r.method {
         Method::GET => {
-            read_file(r.url);
+            let file_content = read_file(&r.url)?;
+            let response = format!(
+                "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
+                file_content.len(),
+                file_content
+            );
+            stream.write(response.as_bytes())?;
+            stream.flush()?;
         }
         Method::POST => {}
         Method::PUT => {}
@@ -81,10 +89,20 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     Ok(())
 }
 
+#[allow(dead_code)]
 /// ## 读取文件
 /// #### [file_path]: 文件路径
 /// #### [result]: 返回文件字符串,已经处理错误
-fn read_file(file_path: String) -> String {
-    
-    todo!("")
+fn read_file(file_path: &str) -> Result<String> {
+    let mut full_path = String::from("static");
+    let mut path = file_path.to_owned();
+    if path == "/index" || path == "/" {
+        path = String::from("/index.html")
+    }
+    full_path = full_path + &path;
+    println!("path: {:?}", full_path);
+    let mut f = File::open(full_path)?;
+    let mut file_content = String::new();
+    f.read_to_string(&mut file_content)?;
+    Ok(file_content)
 }
