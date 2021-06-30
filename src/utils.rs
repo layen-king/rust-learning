@@ -56,7 +56,11 @@ fn parse_url(requst: &str) -> Request {
             params.insert(kv[0].to_owned(), kv[1].to_owned());
         }
     }
-    let req = v[0].split_whitespace().collect::<Vec<&str>>();
+    let req = v
+        .get(0)
+        .unwrap_or(&"")
+        .split_whitespace()
+        .collect::<Vec<&str>>();
     let method = make_method(req.get(0).unwrap_or(&""));
     let url = req.get(1).unwrap_or(&"");
     let req = Request::new(method, url.to_string(), params);
