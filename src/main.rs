@@ -7,7 +7,13 @@ fn main() -> Result<()> {
     for stream in listener.incoming() {
         if let Ok(stream) = stream {
             println!("stream : {:?}", stream);
-            utils::handle_connect(stream)?;
+            let s = utils::handle_connect(stream);
+            match s {
+                Ok(_) => {}
+                Err(e) => {
+                    println!("error : {:?}", e)
+                }
+            }
         }
     }
     Ok(())
