@@ -1,6 +1,7 @@
 use anyhow::Result;
 use std::net::TcpListener;
 mod utils;
+mod mime_types;
 
 fn main() -> Result<()> {
     let listener = TcpListener::bind("127.0.0.1:3303")?;
