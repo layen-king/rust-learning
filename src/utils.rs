@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write};
 use std::net::TcpStream;
+use super::mime_types;
 
 #[derive(Debug)]
 #[allow(dead_code)]
@@ -110,6 +111,8 @@ fn read_file(file_path: &str) -> Result<String> {
 /// 构造返回文件
 fn make_response(file_path: &str) -> String {
     let file_content = read_file(file_path);
+    let mime_types = mime_types::gen_mime_type(String::from(""));
+    println!("mime_types : {:?}", mime_types);
     if let Ok(file_content) = file_content {
         format!(
             "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
