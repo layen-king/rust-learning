@@ -1,4 +1,5 @@
 use anyhow::Result;
+use mime_types;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -76,6 +77,12 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     println!("{:?}", r);
     match r.method {
         Method::GET => {
+            // todo 判断是静态文件还是接口请求
+            // todo 静态文件 -> 解析文件类型,判断是否支持,不支持直接返回错误
+            // todo 读取文件,不存在返回404
+            // ----            
+            // todo 接口请求 -> 查询路由列表,不存在返回404
+            // todo 若存在路由 -> 执行路由函数然后返回
             let response = make_response(&r.url);
             stream.write(response.as_bytes())?;
             stream.flush()?;
@@ -89,7 +96,6 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     Ok(())
 }
 
-#[allow(dead_code)]
 /// ## 读取文件
 /// #### [file_path]: 文件路径
 /// #### [result]: 返回文件字符串,已经处理错误
@@ -112,8 +118,9 @@ fn make_response(file_path: &str) -> String {
     let file_content = read_file(file_path);
     if let Ok(file_content) = file_content {
         format!(
-            "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
+            "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
             file_content.len(),
+            mime_types::get_mime_type("html"),
             file_content
         )
     } else {
