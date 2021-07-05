@@ -1,9 +1,10 @@
 use anyhow::Result;
 use std::net::TcpListener;
-mod mime_types;
 mod utils;
+use mime_types;
 
 fn main() -> Result<()> {
+    mime_types::test();
     // practice::grades::grades();
     let listener = TcpListener::bind("127.0.0.1:3303")?;
     for stream in listener.incoming() {

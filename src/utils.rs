@@ -110,7 +110,6 @@ fn read_file(file_path: &str) -> Result<String> {
 /// 构造返回文件
 fn make_response(file_path: &str) -> String {
     let file_content = read_file(file_path);
-    println!("mime_types : {:?}", mime_types);
     if let Ok(file_content) = file_content {
         format!(
             "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: text/html; charset=utf-8\r\n\r\n{}",
