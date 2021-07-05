@@ -1,7 +1,6 @@
 use anyhow::Result;
 use std::net::TcpListener;
 mod mime_types;
-mod practice;
 mod utils;
 
 fn main() -> Result<()> {
