@@ -23,6 +23,6 @@ pub fn get_mime_type(mime_type: &str) -> Result<String> {
     let value = MIME_TYPES.get(mime_type);
     match value {
         Some(value) => Ok(value.to_owned()),
-        None => Err(anyhow!("unknown type error")),
+        None => Err(anyhow!(format!("Unknown Type Error: {}", mime_type))),
     }
 }
