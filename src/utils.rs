@@ -80,7 +80,7 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
             // todo 判断是静态文件还是接口请求
             // todo 静态文件 -> 解析文件类型,判断是否支持,不支持直接返回错误
             // todo 读取文件,不存在返回404
-            // ----            
+            // ----
             // todo 接口请求 -> 查询路由列表,不存在返回404
             // todo 若存在路由 -> 执行路由函数然后返回
             let response = make_response(&r.url);
@@ -113,7 +113,8 @@ fn read_file(file_path: &str) -> Result<String> {
     Ok(file_content)
 }
 
-/// 构造返回文件
+/// ## 构造返回文件
+/// ## [file_path] 文件路径
 fn make_response(file_path: &str) -> String {
     let file_content = read_file(file_path);
     if let Ok(file_content) = file_content {
