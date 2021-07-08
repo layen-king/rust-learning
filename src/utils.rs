@@ -1,5 +1,6 @@
-use anyhow::Result;
+use anyhow::{Context, Result};
 use mime_types;
+use regex::Regex;
 use std::collections::HashMap;
 use std::fs::File;
 use std::io::{Read, Write};
@@ -21,14 +22,24 @@ enum Method {
 pub struct Request {
     method: Method,
     url: String,
+    is_file: bool,
+    file_type: String,
     params: HashMap<String, String>,
 }
 
 impl Request {
-    fn new(method: Method, url: String, params: HashMap<String, String>) -> Request {
+    fn new(
+        method: Method,
+        url: String,
+        is_file: bool,
+        file_type: String,
+        params: HashMap<String, String>,
+    ) -> Request {
         Request {
             method,
             url,
+            is_file,
+            file_type,
             params,
         }
     }
@@ -63,9 +74,31 @@ fn parse_url(requst: &str) -> Request {
         .split_whitespace()
         .collect::<Vec<&str>>();
     let method = make_method(req.get(0).unwrap_or(&""));
-    let url = req.get(1).unwrap_or(&"");
-    let req = Request::new(method, url.to_string(), params);
+    let mut url = *req.get(1).unwrap_or(&"/index.html");
+    if url == "/index" || url == "/" {
+        url = "/index.html"
+    }
+    let is_file = is_file(url);
+    let mut file_type = String::from("");
+    if is_file {
+        file_type = parse_file_type(url);
+    }
+    let req = Request::new(method, url.to_owned(), is_file, file_type, params);
     req
+}
+
+/// ## 判断是否为文件
+fn is_file(url: &str) -> bool {
+    let re = Regex::new(r"^.+?\.[\w\d]+$").unwrap();
+    re.is_match(url)
+}
+
+/// ## 解析文件类型
+fn parse_file_type(url: &str) -> String {
+    let re = Regex::new(r"^.+?\.([\w\d]+)$").unwrap();
+    let caps = re.captures(url).unwrap();
+    println!("caps {:?}", caps);
+    caps[1].to_owned()
 }
 
 /// 处理tcp流
@@ -74,7 +107,6 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     stream.read(&mut buf)?;
     let request = String::from_utf8_lossy(&buf);
     let r = parse_url(&request);
-    println!("{:?}", r);
     match r.method {
         Method::GET => {
             // todo 判断是静态文件还是接口请求
@@ -83,7 +115,7 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
             // ----
             // todo 接口请求 -> 查询路由列表,不存在返回404
             // todo 若存在路由 -> 执行路由函数然后返回
-            let response = make_response(&r.url);
+            let response = make_response(&r)?;
             stream.write(response.as_bytes())?;
             stream.flush()?;
         }
@@ -101,30 +133,24 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
 /// #### [result]: 返回文件字符串,已经处理错误
 fn read_file(file_path: &str) -> Result<String> {
     let mut full_path = String::from("static");
-    let mut path = file_path.to_owned();
-    if path == "/index" || path == "/" {
-        path = String::from("/index.html")
-    }
-    full_path = full_path + &path;
-    println!("path: {:?}", full_path);
-    let mut f = File::open(full_path)?;
+    full_path = full_path + file_path;
+    let mut f =
+        File::open(full_path.to_owned()).context(format!("can not find file: {}", &full_path))?;
     let mut file_content = String::new();
     f.read_to_string(&mut file_content)?;
     Ok(file_content)
 }
 
 /// ## 构造返回文件
-/// ## [file_path] 文件路径
-fn make_response(file_path: &str) -> String {
-    let file_content = read_file(file_path);
-    if let Ok(file_content) = file_content {
-        format!(
-            "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
-            file_content.len(),
-            mime_types::get_mime_type("html"),
-            file_content
-        )
-    } else {
-        String::from("HTTP/1.1 404 File not found")
-    }
+/// ## [request] 请求解析结构体
+fn make_response(request: &Request) -> Result<String> {
+    let mime_type = mime_types::get_mime_type(&request.file_type)?;
+    let file_content = read_file(&request.url)?;
+    let res = format!(
+        "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
+        file_content.len(),
+        mime_type,
+        file_content
+    );
+    Ok(res)
 }
