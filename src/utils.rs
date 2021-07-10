@@ -3,7 +3,7 @@ use mime_types;
 use regex::Regex;
 use std::collections::HashMap;
 use std::fs::File;
-use std::io::{Read, Write};
+use std::io::{BufReader, Read, Write};
 use std::net::TcpStream;
 
 #[derive(Debug)]
@@ -134,10 +134,11 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
 fn read_file(file_path: &str) -> Result<String> {
     let mut full_path = String::from("static");
     full_path = full_path + file_path;
-    let mut f =
+    let f =
         File::open(full_path.to_owned()).context(format!("can not find file: {}", &full_path))?;
+    let mut buf_reader = BufReader::new(f);
     let mut file_content = String::new();
-    f.read_to_string(&mut file_content)?;
+    buf_reader.read_to_string(&mut file_content)?;
     Ok(file_content)
 }
 
