@@ -101,7 +101,7 @@ fn parse_file_type(url: &str) -> String {
     caps[1].to_owned()
 }
 
-/// 处理tcp流
+/// ## 处理tcp流
 pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
     let mut buf = [0; 1024];
     stream.read(&mut buf)?;
