@@ -10,6 +10,7 @@ version = "0.1.0"
 anyhow = "1.0.40"
 bufstream = "0.1.4"
 lazy_static = "1.4.0"
+leetcode = {path = "leetcode"}
 mime_types = {path = "mime_types"}
 once_cell = "1.7.2"
 rand = "0.8.3"
