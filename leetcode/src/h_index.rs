@@ -7,36 +7,44 @@
 /// > 如果 h 有多有种可能的值 ，h 指数是其中最大的那个。
 #[allow(dead_code)]
 pub fn h_index(citations: Vec<i32>) -> i32 {
-  // todo 此版本存在问题
-  let len = citations.len();
-  let mut left = 0;
-  let mut right = len - 1;
-  while right > left {
-      let mid = left + (right - left) / 2 >> 0;
-      if (citations[mid] as usize) < len - mid {
-          left = mid + 1
-      } else {
-          right = mid - 1
-      }
-  }
-  (len - left) as i32
+    let len = citations.len();
+    let mut left = 0;
+    let mut right = len;
+    while right >= left {
+        let mid = (left + right) / 2;
+        if (citations[mid] as usize) <= len - mid {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    citations[len - left]
 }
 
 #[allow(dead_code)]
 pub fn h_index_1(citations: Vec<i32>) -> i32 {
-  let len = citations.len();
-  let mut l = 0;
-  let mut r = len;
-  let mut ret = 0;
-  while l < r {
-      let m = (l + r) / 2;
-      if citations[m] as usize <= len - m {
-          ret = ret.max(citations[m]);
-          l = m + 1;
-      } else {
-          ret = ret.max((len - m) as i32);
-          r = m;
-      }
-  }
-  ret
+    let len = citations.len();
+    let mut l = 0;
+    let mut r = len;
+    let mut ret = 0;
+    while l < r {
+        let m = (l + r) / 2;
+        if citations[m] as usize <= len - m {
+            ret = ret.max(citations[m]);
+            l = m + 1;
+        } else {
+            ret = ret.max((len - m) as i32);
+            r = m;
+        }
+    }
+    ret
+}
+
+#[test]
+fn text_h_index() {
+    let citations = vec![0, 1, 3, 5, 6];
+    let h_index = h_index(citations.clone());
+    let h_index_1 = h_index_1(citations);
+    println!("h_index:{}", h_index);
+    assert_eq!(h_index_1, h_index);
 }
