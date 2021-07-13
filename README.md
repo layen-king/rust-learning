@@ -9,6 +9,9 @@
 ## tips文件夹
 > 一些基础用法
 
+## leetcode文件夹
+> leetcode刷题rs
+
 ## 一些问题
 
 #### clone git仓库遇到错误
