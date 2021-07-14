@@ -13,7 +13,7 @@ pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
           }
       }
   }
-  return vec![0, 1];
+  panic!("not found")
 }
 use std::collections::HashMap;
 /// ## 两数之和
