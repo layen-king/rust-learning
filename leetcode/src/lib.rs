@@ -8,4 +8,6 @@ pub mod longest_palindrome;
 pub mod is_covered;
 pub mod copy_random_list;
 
+pub mod convert;
+
 
