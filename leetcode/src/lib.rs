@@ -10,4 +10,8 @@ pub mod copy_random_list;
 
 pub mod convert;
 
+pub mod reverse;
+
+pub mod my_atoi;
+
 
