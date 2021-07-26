@@ -83,16 +83,83 @@ use regex::Regex;
 /// ### 解析得到整数 -91283472332 。
 /// ### 由于 -91283472332 小于范围 [-231, 231 - 1] 的下界，最终结果被截断为 -231 = -2147483648 。\
 #[allow(dead_code)]
-pub fn my_atoi(s: String) {
-    let re = Regex::new(r"(/[+-]?(\d+).*").unwrap();
-    let arr = re.captures_iter(&s.trim_start());
-    for caps in arr {
-        println!("caps:{:?}", caps);
+pub fn my_atoi(s: String) -> i32 {
+    let re = Regex::new(r"([+-]?\d+).*").unwrap();
+    let is_match = re.is_match(&s.trim_start());
+    println!("is match: {}", is_match);
+    if !is_match {
+        0 as i32
+    } else {
+        let str = re.replace(&s.trim_start(), "$1");
+        str.to_owned().parse::<i32>().unwrap()
+    }
+}
+
+/// 不适用正则表达式,使用模式匹配
+pub fn my_atoi_1(s: String) -> i32 {
+    let mut res_str = String::from("");
+    for (i, v) in s.trim_start().chars().enumerate() {
+        if i == 0 && v == '+' {
+            continue;
+        } else if i == 0 && v == '-' {
+            res_str.push_str("-");
+            continue;
+        } else if (v as usize) < 48 || (v as usize) > 57 {
+            break;
+        } else {
+            res_str.push(v);
+        }
+    }
+
+    let first = res_str.get(0..1);
+    match first {
+        Some("-") => {
+            return res_str.parse::<i32>().unwrap_or(i32::MIN);
+        }
+        None => 0 as i32,
+        Some(_) => {
+            return res_str.parse::<i32>().unwrap_or(i32::MAX);
+        }
+    }
+}
+
+/// 不适用正则表达式,使用next匹配
+pub fn my_atoi_2(s: String) -> i32 {
+    let mut result = 0 as i64;
+    let mut negative = false;
+    for (i, v) in s.trim_start().chars().enumerate() {
+        if i == 0 && v == '+' {
+            continue;
+        } else if i == 0 && v == '-' {
+            negative = true;
+            continue;
+        } else if v.is_digit(10) {
+            result = result * 10 + v.to_digit(10).unwrap() as i64;
+            println!("result2: {}", result);
+            if negative && -result < i32::MIN as i64 {
+                return i32::MIN;
+            }
+            if !negative && result > i32::MAX as i64 {
+                return i32::MAX;
+            }
+        } else {
+            break;
+        }
+    }
+    if negative {
+        -result as i32
+    } else {
+        result as i32
     }
 }
 
 #[test]
 fn test_my_atoi() {
     let str = String::from("   -42");
-    my_atoi(str);
+    my_atoi_1(str.clone());
+    let result = my_atoi(str);
+    assert_eq!(result, -42);
+    let str = String::from("-2147483648");
+    let result = my_atoi_2(str);
+    println!("result1:{}", result);
 }
