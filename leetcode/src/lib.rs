@@ -15,5 +15,7 @@ pub mod reverse;
 pub mod my_atoi;
 
 pub mod find_second_minimum_value;
+pub mod is_palindrome;
+pub mod dp;
 
 
