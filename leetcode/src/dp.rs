@@ -28,9 +28,32 @@ pub fn coin_change(coins: Vec<usize>, i: usize) -> i32 {
     dp(&coins, i as i32, &mut coins_map)
 }
 
+/// 从小到大迭代
+pub fn coin_change_1(coins: Vec<usize>, i: usize) -> i32 {
+    let mut dp = vec![i + 1, i + 1];
+    dp[0] = 0;
+    for k in 0..=i {
+        for coin in &coins {
+            if k < *coin {
+                continue;
+            }
+            dp[k] = dp[k].min(1 + dp[k - coin]);
+        }
+    }
+    if dp[i] == i + 1 {
+        return -1 as i32;
+    } else {
+        dp[i] as i32
+    }
+}
+
 #[test]
 fn test_dp() {
     let coins = vec![1, 2, 5];
     let result = coin_change(coins, 11);
+    assert_eq!(3, result);
+
+    let coins = vec![1, 2, 5];
+    let result = coin_change_1(coins, 11);
     assert_eq!(3, result);
 }
