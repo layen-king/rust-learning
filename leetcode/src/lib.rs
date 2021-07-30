@@ -18,5 +18,6 @@ pub mod find_second_minimum_value;
 pub mod is_palindrome;
 pub mod dp;
 pub mod path_in_zig_zag_tree;
+pub mod title_to_number;
 
 
