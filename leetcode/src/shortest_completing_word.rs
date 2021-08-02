@@ -51,6 +51,9 @@ pub fn shortest_completing_word(license_plate: String, words: Vec<String>) -> St
     let lincense_map = helper(&license);
     let mut result = String::new();
     for word in words.iter() {
+        if word.len() < license.len() {
+            continue;
+        };
         let word_obj = helper(&word);
         let mut is_not = true;
         for (key, value) in &lincense_map {
