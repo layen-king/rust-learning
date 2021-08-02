@@ -21,7 +21,7 @@
 
 // 输入：height = [1,2,1]
 // 输出：2
-fn max_area(height: Vec<i32>) -> i32 {
+pub fn max_area(height: Vec<i32>) -> i32 {
     let mut res = 0;
     // 双指针
     let mut left = 0;
