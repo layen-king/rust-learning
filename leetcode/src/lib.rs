@@ -23,5 +23,8 @@ pub mod max_area;
 pub mod next_greatest_letter;
 pub mod dominant_index;
 pub mod shortest_completing_word;
+pub mod find_unsorted_subarray;
+pub mod int_to_roman;
+pub mod roman_to_int;
 
 
