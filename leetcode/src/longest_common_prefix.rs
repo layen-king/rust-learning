@@ -28,7 +28,7 @@
 /// ### 链接：https:/// ###leetcode-cn.com/problems/longest-common-prefix
 /// ### 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 pub fn longest_common_prefix(strs: Vec<String>) -> String {
-    let mut result = String::new();
+    let mut result = vec![];
     for i in 0..strs[0].len() {
         let current_char = strs[0].chars().nth(i);
         let pass = strs
@@ -41,7 +41,7 @@ pub fn longest_common_prefix(strs: Vec<String>) -> String {
             break;
         }
     }
-    result
+    result.iter().collect::<String>()
 }
 
 #[test]
