@@ -26,5 +26,6 @@ pub mod shortest_completing_word;
 pub mod find_unsorted_subarray;
 pub mod int_to_roman;
 pub mod roman_to_int;
+pub mod longest_common_prefix;
 
 

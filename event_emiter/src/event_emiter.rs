@@ -11,6 +11,7 @@ pub struct Listener {
     id: String,
 }
 
+/// ## 事件
 #[derive(Default)]
 pub struct EventEmitter {
     listeners: HashMap<String, Vec<Listener>>,
@@ -20,7 +21,7 @@ impl EventEmitter {
     pub fn new() -> Self {
         Self { ..Self::default() }
     }
-    pub fn on_limited<F, T>(&mut self, event: &str, limit: Option<u64>, callback: F) -> String
+    fn on_limited<F, T>(&mut self, event: &str, limit: Option<u64>, callback: F) -> String
     where
         for<'de> T: Deserialize<'de>,
         F: Fn(T) + 'static + Sync + Send,
@@ -45,7 +46,11 @@ impl EventEmitter {
         }
         id
     }
-    pub fn on<F, T>(&mut self, event: &str, callback: F) -> String
+    /// ## 注册事件
+    /// ### [event] 事件名称
+    /// ### [callback] 事件回调
+    /// ### [return] 返回事件id
+    pub fn register<F, T>(&mut self, event: &str, callback: F) -> String
     where
         for<'de> T: Deserialize<'de>,
         F: Fn(T) + 'static + Send + Sync,
@@ -53,7 +58,7 @@ impl EventEmitter {
         let id = self.on_limited(event, None, callback);
         id
     }
-    /// 触发一次
+    /// ## 触发一次
     pub fn once<F, T>(&mut self, event: &str, callback: F) -> String
     where
         for<'de> T: Deserialize<'de>,
@@ -62,6 +67,9 @@ impl EventEmitter {
         let id = self.on_limited(event, Some(1), callback);
         id
     }
+    /// ## 触发事件
+    /// ### [event] 事件名称
+    /// ### [value] 触发参数
     pub fn emit<T>(&mut self, event: &str, value: T) -> Vec<thread::JoinHandle<()>>
     where
         T: Serialize,
@@ -94,7 +102,8 @@ impl EventEmitter {
         }
         callback_handlers
     }
-    pub fn remove_listener(&mut self, id: &str) -> bool {
+    /// 移除事件注册
+    pub fn remove_registered(&mut self, id: &str) -> bool {
         for (_, listeners) in self.listeners.iter_mut() {
             if let Some(index) = listeners.iter().position(|listener| listener.id == id) {
                 listeners.remove(index);
