@@ -100,10 +100,12 @@ impl EventEmitter {
             for index in listeners_to_remove.into_iter().rev() {
                 listeners.remove(index);
             }
+        }else{
+            println!("event :{} not found", event);
         }
         callback_handlers
     }
-    /// 移除事件注册
+    /// ## 移除事件注册
     pub fn remove_registered(&mut self, id: &str) -> bool {
         for (_, listeners) in self.listeners.iter_mut() {
             if let Some(index) = listeners.iter().position(|listener| listener.id == id) {
@@ -130,4 +132,5 @@ fn test() {
     event_emiter.emit("hello1","abcd");
     event_emiter.emit("hello1","abcde");
     println!("{}", event_emiter.get_count());
+    event_emiter.emit("hello1","abcde");
 }
