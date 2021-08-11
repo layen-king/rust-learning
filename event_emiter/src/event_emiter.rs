@@ -11,7 +11,7 @@ pub struct Listener {
     id: String,
 }
 
-/// ## 事件
+/// ## 事件发布订阅
 #[derive(Default)]
 pub struct EventEmitter {
     listeners: HashMap<String, Vec<Listener>>,
@@ -21,6 +21,7 @@ impl EventEmitter {
     pub fn new() -> Self {
         Self { ..Self::default() }
     }
+    /// ## 处理事件次数
     fn on_limited<F, T>(&mut self, event: &str, limit: Option<u64>, callback: F) -> String
     where
         for<'de> T: Deserialize<'de>,
@@ -123,6 +124,10 @@ fn test() {
     fn t(a: String) {
         println!("a :{}", a);
     }
-    event_emiter.on("hello", t);
+    event_emiter.register("hello", t);
     event_emiter.emit("hello", "test");
+    event_emiter.once("hello1", t);
+    event_emiter.emit("hello1","abcd");
+    event_emiter.emit("hello1","abcde");
+    println!("{}", event_emiter.get_count());
 }
