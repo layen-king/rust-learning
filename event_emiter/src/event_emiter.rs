@@ -100,7 +100,7 @@ impl EventEmitter {
             for index in listeners_to_remove.into_iter().rev() {
                 listeners.remove(index);
             }
-        }else{
+        } else {
             println!("event :{} not found", event);
         }
         callback_handlers
@@ -129,8 +129,8 @@ fn test() {
     event_emiter.register("hello", t);
     event_emiter.emit("hello", "test");
     event_emiter.once("hello1", t);
-    event_emiter.emit("hello1","abcd");
-    event_emiter.emit("hello1","abcde");
+    event_emiter.emit("hello1", "abcd");
+    event_emiter.emit("hello1", "abcde");
     println!("{}", event_emiter.get_count());
-    event_emiter.emit("hello1","abcde");
+    event_emiter.emit("hello1", "abcde");
 }
