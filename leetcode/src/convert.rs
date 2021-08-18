@@ -1,10 +1,3 @@
-#[test]
-pub fn test_conver() {
-    let result = convert(String::from("PAYPALISHIRING"), 3);
-    println!("result: {}", result);
-    assert_eq!(result, String::from("PAHNAPLSIIGYIR"));
-}
-
 /// ## Z 字形变换
 
 /// ### 将一个给定字符串 s 根据给定的行数 numRows ，以从上往下、从左到右进行 Z 字形排列。
@@ -22,9 +15,9 @@ pub fn test_conver() {
 /// ###  
 
 /// ### 示例 1：
-
 /// ### 输入：s = "PAYPALISHIRING", numRows = 3
 /// ### 输出："PAHNAPLSIIGYIR"
+
 /// ### 示例 2：
 /// ### 输入：s = "PAYPALISHIRING", numRows = 4
 /// ### 输出："PINALSIGYAHRPI"
@@ -33,8 +26,8 @@ pub fn test_conver() {
 /// ### A   L S  I G
 /// ### Y A   H R
 /// ### P     I
-/// ### 示例 3：
 
+/// ### 示例 3：
 /// ### 输入：s = "A", numRows = 1
 /// ### 输出："A"
 pub fn convert(s: String, num_rows: i32) -> String {
@@ -64,4 +57,11 @@ pub fn convert(s: String, num_rows: i32) -> String {
         }
     }
     v.into_iter().collect()
+}
+
+#[test]
+pub fn test_conver() {
+    let result = convert(String::from("PAYPALISHIRING"), 3);
+    println!("result: {}", result);
+    assert_eq!(result, String::from("PAHNAPLSIIGYIR"));
 }

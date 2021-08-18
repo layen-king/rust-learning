@@ -52,7 +52,7 @@ pub fn check_record(s: String) -> bool {
                 break;
             }
         }
-        if count >= 2 || repeat >= 3 {
+        if count == 2 || repeat == 3 {
             return false;
         }
     }
