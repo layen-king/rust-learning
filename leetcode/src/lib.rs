@@ -31,5 +31,7 @@ pub mod three_sum;
 pub mod check_record;
 pub mod three_sum_closest;
 pub mod letter_combinations;
+pub mod reverse_vowels;
+pub mod reverse_str;
 
 
