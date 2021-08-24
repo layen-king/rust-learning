@@ -33,5 +33,6 @@ pub mod three_sum_closest;
 pub mod letter_combinations;
 pub mod reverse_vowels;
 pub mod reverse_str;
+pub mod find_cheapest_price;
 
 
