@@ -34,5 +34,6 @@ pub mod letter_combinations;
 pub mod reverse_vowels;
 pub mod reverse_str;
 pub mod find_cheapest_price;
+pub mod compare_version;
 
 
