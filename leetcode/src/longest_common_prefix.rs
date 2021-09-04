@@ -33,7 +33,6 @@ pub fn longest_common_prefix(strs: Vec<String>) -> String {
         let current_char = strs[0].chars().nth(i);
         let pass = strs
             .iter()
-            .skip(1)
             .all(|f| f.chars().nth(i) == current_char);
         if pass {
             result.push(current_char.unwrap());
