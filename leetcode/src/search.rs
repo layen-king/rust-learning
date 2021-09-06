@@ -28,7 +28,6 @@ pub fn search(nums: Vec<i32>, target: i32) -> i32 {
     if nums[0] > target  || nums[right] < target {return -1};
     while left <= right {
         let mid = (right - left) / 2 + left;
-        println!("{}", mid);
         if nums[mid] == target {
             return mid as i32;
         } else if nums[mid] < target {

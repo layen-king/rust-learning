@@ -38,5 +38,6 @@ pub mod compare_version;
 pub mod smallest_k;
 pub mod is_valid;
 pub mod search;
+pub mod merge_two_lists;
 
 
