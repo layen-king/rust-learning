@@ -36,6 +36,10 @@ pub mod reverse_str;
 pub mod find_cheapest_price;
 pub mod compare_version;
 pub mod smallest_k;
+<<<<<<< HEAD
 pub mod search;
+=======
+pub mod is_valid;
+>>>>>>> d23b01d71feecf061ffff727f784c8ddb20bd37e
 
 

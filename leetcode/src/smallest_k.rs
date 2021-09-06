@@ -24,8 +24,8 @@ pub fn smallest_k(arr: Vec<i32>, k: usize) -> Vec<i32> {
 
 use std::collections::BinaryHeap;
 pub fn smallest_k1(arr: Vec<i32>, k: i32) -> Vec<i32> {
-    assert!(arr.len() >= k);
     let k = k as usize;
+    assert!(arr.len() >= k);
     let mut heap = BinaryHeap::new();
     for i in 0..k {
         heap.push(arr[i])
