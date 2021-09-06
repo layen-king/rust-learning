@@ -25,8 +25,10 @@
 /// ### 链接：https://eetcode-cn.com/problems/binary-search
 pub fn search(nums: Vec<i32>, target: i32) -> i32 {
     let [mut left, mut right] = [0, nums.len() - 1];
+    if nums[0] > target  || nums[right] < target {return -1};
     while left <= right {
         let mid = (right - left) / 2 + left;
+        println!("{}", mid);
         if nums[mid] == target {
             return mid as i32;
         } else if nums[mid] < target {
@@ -40,6 +42,6 @@ pub fn search(nums: Vec<i32>, target: i32) -> i32 {
 
 #[test]
 fn test_search() {
-    let result = search(vec![-1, 0, 3, 5, 9, 12], 9);
-    assert_eq!(result, 4);
+    let result = search(vec![5], -5);
+    assert_eq!(result, -1);
 }
