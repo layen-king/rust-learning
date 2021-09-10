@@ -40,4 +40,5 @@ pub mod is_valid;
 pub mod search;
 pub mod merge_two_lists;
 pub mod balanced_string_split;
+pub mod chalk_replacer;
 

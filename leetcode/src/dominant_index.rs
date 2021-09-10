@@ -36,6 +36,31 @@ pub fn dominant_index(nums: Vec<i32>) -> i32 {
         -1
     }
 }
+// use std::collections::BinaryHeap;
+/// ## 使用最大堆
+// pub fn dominant_index1(nums: Vec<i32>) -> i32 {
+//     if nums.len() == 1 {
+//         return 0i32;
+//     }
+//     let mut index = 0;
+//     let mut max = i32::MIN;
+//     let mut heap = BinaryHeap::new();
+//     for (i, n) in nums.iter().enumerate() {
+//         if n > &max {
+//             index = 1;
+//             max = *n;
+//         }
+//         heap.append(n);
+    
+//     heap.peek();
+//     let second = heap.peek().unwrap();
+//     if &max >= second * 2 {
+//         index
+//     } else {
+//         -1
+//     }
+//     todo!()
+// }
 
 #[test]
 fn test_dominant_index() {
