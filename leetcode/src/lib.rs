@@ -42,4 +42,5 @@ pub mod merge_two_lists;
 pub mod balanced_string_split;
 pub mod chalk_replacer;
 pub mod find_longest_word;
+pub mod find_peak_element;
 
