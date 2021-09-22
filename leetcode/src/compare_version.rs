@@ -51,7 +51,7 @@
 
 /// ### 来源：力扣（LeetCode）
 /// ### 链接：https://leetcode-cn.com/problems/compare-version-numbers
-fn compare_version(version1: String, version2: String) -> i32 {
+pub fn compare_version(version1: String, version2: String) -> i32 {
     let mut v1: Vec<u32> = version1
         .split('.')
         .map(|s| s.parse::<u32>().unwrap_or(0))
