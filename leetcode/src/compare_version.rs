@@ -87,6 +87,7 @@ pub fn compare_version(version1: String, version2: String) -> i32 {
     0i32
 }
 
+#[allow(dead_code)]
 fn compare_version1(version1: String, version2: String) -> i32 {
     let v1: Vec<u32> = version1
         .split('.')

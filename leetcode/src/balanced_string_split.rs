@@ -75,10 +75,10 @@ pub fn balanced_string_split1(s: String) -> i32 {
     }
     count
 }
-use std::time::{SystemTime, UNIX_EPOCH};
 
 #[test]
 fn test_balanced_string_split() {
+    use std::time::{SystemTime, UNIX_EPOCH};
     let start = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     let result = balanced_string_split(String::from("RLLLLRRRLR"));
     assert_eq!(result, 3);

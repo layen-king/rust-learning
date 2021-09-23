@@ -60,7 +60,8 @@ fn helper(nums: &Vec<i32>, i: i32) -> i32 {
     i32::MIN
 }
 
-fn find_peak_element1(nums: Vec<i32>) -> i32 {
+
+pub fn find_peak_element1(nums: Vec<i32>) -> i32 {
     if nums.len() == 1 {
         return 0;
     }
@@ -80,10 +81,10 @@ fn find_peak_element1(nums: Vec<i32>) -> i32 {
     }
 }
 
-use std::time::{SystemTime, UNIX_EPOCH};
 
 #[test]
 fn test_find_peak_element() {
+    use std::time::{SystemTime, UNIX_EPOCH};
     let start = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
     let result = find_peak_element1(vec![1, 2, 1, 3, 5, 6, 4]);
     assert_eq!(result, 1);
