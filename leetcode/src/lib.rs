@@ -47,3 +47,4 @@ pub mod is_valid_sudoku;
 pub mod sort_colors;
 pub mod generate_parenthesis;
 pub mod is_power_of_three;
+pub mod combination_sum;
