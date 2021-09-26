@@ -34,4 +34,7 @@ pub fn get_sum(a: i32, b: i32) -> i32 {
 }
 
 #[test]
-fn test_get_sum() {}
+fn test_get_sum() {
+  let result = get_sum(100,99);
+  assert_eq!(result, 199);
+}
