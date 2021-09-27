@@ -49,3 +49,4 @@ pub mod generate_parenthesis;
 pub mod is_power_of_three;
 pub mod combination_sum;
 pub mod get_sum;
+pub mod num_decodings;
