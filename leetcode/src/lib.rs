@@ -50,3 +50,4 @@ pub mod is_power_of_three;
 pub mod combination_sum;
 pub mod get_sum;
 pub mod num_decodings;
+pub mod find_repeated_dna_sequences;
