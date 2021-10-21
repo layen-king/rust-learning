@@ -52,3 +52,4 @@ pub mod get_sum;
 pub mod num_decodings;
 pub mod find_repeated_dna_sequences;
 pub mod min_moves;
+pub mod plus_one;
