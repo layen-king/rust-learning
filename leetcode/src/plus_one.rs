@@ -37,17 +37,15 @@
 /// ### 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 pub fn one_plus(digits: Vec<i32>) -> Vec<i32> {
     let mut digits = digits.clone();
-    for i in digits.len() - 1..=0 {
-        if digits[i] != 9 {
-            digits[i] = digits[i] + 1;
-            return digits;
+    for i in digits.iter_mut().rev() {
+        if i == &9 {
+            *i = 0;
         } else {
-            digits[i] = 0;
+            *i = *i + 1;
+            return digits;
         }
     }
-    if digits[0] == 0 {
-        digits.insert(0, 1);
-    }
+    digits.insert(0, 1);
     digits
 }
 
