@@ -35,31 +35,33 @@ use std::collections::HashMap;
 /// ### 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 #[allow(dead_code)]
 pub struct MapSum {
-  map:HashMap<String,i32>
+    map: HashMap<String, i32>,
 }
 #[allow(dead_code)]
 impl MapSum {
     fn new() -> Self {
-      MapSum{ map: HashMap::new() }
+        MapSum {
+            map: HashMap::new(),
+        }
     }
-    fn insert(&mut self, key: String, val: i32){
-      self.map.insert(key, val);
+    fn insert(&mut self, key: String, val: i32) {
+        self.map.insert(key, val);
     }
     fn sum(&self, prefix: String) -> i32 {
-      let mut res = 0;
-      for key in self.map.keys() {
-        if key.starts_with(&prefix){
-          res += self.map.get(&*key).unwrap();
+        let mut res = 0;
+        for key in self.map.keys() {
+            if key.starts_with(&prefix) {
+                res += self.map.get(&*key).unwrap();
+            }
         }
-      }
-      res
+        res
     }
 }
 
 #[test]
-fn test_map_sum(){
-  let mp = MapSum.new();
-  mp.insert(String::from("app"),3);
-  let res = map.sum(String::from("ap"));
-  println!("res is : {:?}",res);
+fn test_map_sum() {
+    let mp = MapSum.new();
+    mp.insert(String::from("app"), 3);
+    let res = map.sum(String::from("ap"));
+    println!("res is : {:?}", res);
 }
