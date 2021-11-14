@@ -51,7 +51,7 @@ impl MapSum {
         let mut res = 0;
         for key in self.map.keys() {
             if key.starts_with(&prefix) {
-                res += self.map.get(&*key).unwrap();
+                res += self.map.get(key).unwrap();
             }
         }
         res
