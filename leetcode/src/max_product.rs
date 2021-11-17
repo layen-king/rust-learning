@@ -35,11 +35,11 @@
 /// ### 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 pub fn max_product(words:Vec<String>)->i32{
   let mut words = words.clone();
-  let mut res = 0;
-  words.sort_by(|x,y| x.len() > y.len());
+  let mut res = 0i32;
+  words.sort_by(|x,y| y.len().cmp(&x.len()));
   for i in 0..words.len(){
     for j in i+1..words.len(){
-      let tem = words[j].len() * words[i].len();
+      let tem:i32 = (words[j].len() as i32) * (words[i].len() as i32);
       if tem > res && help(&words[i],&words[j]){
         res = tem
       }
@@ -49,8 +49,8 @@ pub fn max_product(words:Vec<String>)->i32{
 }
 
 fn help(str1:&str, str2:&str)->bool{
-  for i in 0..str2.len() {
-    if str1.indexOf(str2[i]){
+  for i in str2.chars(){
+    if str1.find(i).is_some(){
       return false;
     }
   }
@@ -59,7 +59,7 @@ fn help(str1:&str, str2:&str)->bool{
 
 #[test]
 fn test_max_product() {
-  let words = ["eae", "ea", "aaf", "bda", "fcf", "dc", "ac", "ce", "cefde", "dabae"].iter().map(|c|c.to_owned()).collect();
+  let words:Vec<String> = ["eae", "ea", "aaf", "bda", "fcf", "dc", "ac", "ce", "cefde", "dabae"].iter().map(|c|c.to_string()).collect::<Vec<_>>();
   let result = max_product(words);
   println!("{}", result);
 }
