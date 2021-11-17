@@ -53,8 +53,5 @@ pub mod num_decodings;
 pub mod find_repeated_dna_sequences;
 pub mod min_moves;
 pub mod plus_one;
-<<<<<<< HEAD
 pub mod max_product;
-=======
 pub mod map_sum;
->>>>>>> 3c139ef9ba882e129268bbd7ba911e55efc211de
