@@ -56,3 +56,4 @@ pub mod plus_one;
 pub mod max_product;
 pub mod map_sum;
 pub mod find_tilt;
+pub mod buddy_strings;
