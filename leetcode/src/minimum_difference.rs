@@ -46,10 +46,9 @@ pub fn minimum_difference(nums:Vec<i32>,k: i32) -> i32{
   nums.sort();
   let mut res  = i32::MAX;
   for i in 0..=nums.len() - k{
-    let max = nums[i + k -1];
-    let min = nums[i];
-    if res > max - min {
-      res = max - min
+    let def = nums[i + k -1] - nums[i];
+    if res > def {
+      res = def
     }
   }
   res
