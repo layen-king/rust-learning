@@ -5,6 +5,7 @@ mod utils;
 
 fn main() -> Result<()> {
     let listener = TcpListener::bind("127.0.0.1:3303")?;
+    println!("http is listening on 127.0.0.1:3303");
     for stream in listener.incoming() {
         let stream = stream?;
         match utils::handle_connect(stream) {

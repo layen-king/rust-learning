@@ -115,7 +115,8 @@ pub fn handle_connect(mut stream: TcpStream) -> Result<()> {
             // ----
             // todo 接口请求 -> 查询路由列表,不存在返回404
             // todo 若存在路由 -> 执行路由函数然后返回
-            let response = make_response(&r)?;
+            let response = make_response(&r);
+            println!("response: {}", response);
             stream.write(response.as_bytes())?;
             stream.flush()?;
         }
@@ -144,14 +145,25 @@ fn read_file(file_path: &str) -> Result<String> {
 
 /// ## 构造返回文件
 /// ## [request] 请求解析结构体
-fn make_response(request: &Request) -> Result<String> {
-    let mime_type = mime_types::get_mime_type(&request.file_type)?;
-    let file_content = read_file(&request.url)?;
-    let res = format!(
-        "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
-        file_content.len(),
-        mime_type,
-        file_content
-    );
-    Ok(res)
+fn make_response(request: &Request) -> String {
+    // 获取mimeType, 若mimeType不存在,默认以text/plan进行处理
+    let mime_type =
+        mime_types::get_mime_type(&request.file_type).unwrap_or(String::from("text/plain"));
+    let file_content_res = read_file(&request.url);
+    if file_content_res.is_err() {
+        format!(
+            "HTTP/1.1 404 NotFound\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
+            0,
+            mime_type,
+            String::from("404")
+        )
+    } else {
+        let file_content = file_content_res.unwrap();
+        format!(
+            "HTTP/1.1 200 Ok\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
+            file_content.len(),
+            mime_type,
+            file_content,
+        )
+    }
 }
