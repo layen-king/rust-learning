@@ -148,14 +148,15 @@ fn read_file(file_path: &str) -> Result<String> {
 fn make_response(request: &Request) -> String {
     // 获取mimeType, 若mimeType不存在,默认以text/plan进行处理
     let mime_type =
-        mime_types::get_mime_type(&request.file_type).unwrap_or(String::from("text/plain"));
+        mime_types::get_mime_type(&request.file_type).unwrap_or(String::from("text/html"));
     let file_content_res = read_file(&request.url);
     if file_content_res.is_err() {
+        let file_content = read_file("/404.html").unwrap();
         format!(
             "HTTP/1.1 404 NotFound\r\nContent-Length: {}\r\nContent-type: {}; charset=utf-8\r\n\r\n{}",
-            0,
+            file_content.len(),
             mime_type,
-            String::from("404")
+            file_content
         )
     } else {
         let file_content = file_content_res.unwrap();
