@@ -11,7 +11,7 @@ pub fn find_repeat_file(path: String) -> Result<(), Error> {
         .filter_map(Result::ok)
         .filter(|e| !e.file_type().is_dir())
     {
-        let file_size = entry.metadata()?.len().to_string();
+        let file_size = entry.metadata()?.len();
         let file_path = entry.path().display().to_string();
         // 若存在同样的大小,push path到map
         if file_map.get(&file_size).is_none() {
@@ -35,6 +35,7 @@ mod tests {
     use super::find_repeat_file;
     #[test]
     fn test() {
-        find_repeat_file();
+        let res = find_repeat_file(String::from("./"));
+        println!("{:?}", res)
     }
 }
