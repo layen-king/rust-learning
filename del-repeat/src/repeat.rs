@@ -3,8 +3,11 @@ use std::fs::File;
 use std::io::{Error, Write};
 use walkdir::WalkDir;
 
-pub fn find_repeat_file(path: String) -> Result<(), Error> {
+pub fn find_repeat_file(path: String) -> Result<bool, Error> {
+    println!("读取路径文件:{}",path);
     let mut file_map = BTreeMap::new();
+
+    let mut has_reapet = false;
 
     for entry in WalkDir::new(&path)
         .into_iter()
@@ -20,6 +23,7 @@ pub fn find_repeat_file(path: String) -> Result<(), Error> {
         } else {
             let tem = file_map.get_mut(&file_size).unwrap();
             tem.push(file_path);
+            has_reapet = true;
         }
     }
     // 由小到大排序
@@ -27,7 +31,7 @@ pub fn find_repeat_file(path: String) -> Result<(), Error> {
     let mut output = File::create(path)?;
     let str = String::from(format!("{:?}", file_map));
     write!(output, "{}", str)?;
-    Ok(())
+    Ok(has_reapet)
 }
 
 #[cfg(test)]
