@@ -38,8 +38,15 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool,BTreeMap<u64,Vec<String>>
 
 /// ## 删除重复文件
 /// ### [result] 要删除的文件,以BTreeMap保存
-pub fn delete_repeat_file(result:BTreeMap<u64,Vec<String>>)-> Result<bool,Error>{
+pub fn delete_repeat_file(mut result:BTreeMap<u64,Vec<String>>)-> Result<bool,Error>{
     println!("{:#?}",result);
+    result.iter_mut().for_each(|res|{
+        if res.1.len() > 1{
+            res.1.iter_mut().for_each(|path|{
+                println!("删除文件:{}",path);
+            })
+        }
+    });
     todo!()
 }
 

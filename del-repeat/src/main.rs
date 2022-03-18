@@ -19,7 +19,6 @@ fn main() {
                     stdout().flush().expect("err");
                     let mut confirm = String::new();
                     stdin().read_line(&mut confirm).expect("输入错误");
-                    assert_eq!(confirm.trim(),String::from("n"));
                     match confirm.trim() {
                         "Y" | "y" | "1" => {
                             let del = repeat::delete_repeat_file(result);
