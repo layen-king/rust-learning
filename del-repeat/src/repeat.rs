@@ -2,9 +2,12 @@ use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::{Error, Write};
 use walkdir::WalkDir;
+use std::path::PathBuf;
 
-pub fn find_repeat_file(path: String) -> Result<bool, Error> {
-    println!("读取路径文件:{}",path);
+/// ## 查找重复文件并且输出
+/// ### [path] 要查询的文件路径
+pub fn find_repeat_file(path: PathBuf) -> Result<(bool,BTreeMap<u64,Vec<String>>), Error> {
+    println!("读取路径文件:{:?}",path);
     let mut file_map = BTreeMap::new();
 
     let mut has_reapet = false;
@@ -26,20 +29,27 @@ pub fn find_repeat_file(path: String) -> Result<bool, Error> {
             has_reapet = true;
         }
     }
-    // 由小到大排序
-    let path = format!("{}/result.json", &path);
+    let path = format!("{}/result.json", &path.display().to_string());
     let mut output = File::create(path)?;
     let str = String::from(format!("{:?}", file_map));
     write!(output, "{}", str)?;
-    Ok(has_reapet)
+    Ok((has_reapet,file_map))
+}
+
+/// ## 删除重复文件
+/// ### [result] 要删除的文件,以BTreeMap保存
+pub fn delete_repeat_file(result:BTreeMap<u64,Vec<String>>)-> Result<bool,Error>{
+    println!("{:#?}",result);
+    todo!()
 }
 
 #[cfg(test)]
 mod tests {
+    use std::path::Path;
     use super::find_repeat_file;
     #[test]
     fn test() {
-        let res = find_repeat_file(String::from("./"));
+        let res = find_repeat_file(Path::new("../").to_path_buf());
         println!("{:?}", res)
     }
 }
