@@ -6,7 +6,6 @@ use std::thread;
 use uuid::Uuid;
 #[allow(dead_code)]
 pub struct Listener {
-    
     callback: Arc<dyn Fn(Vec<u8>) + Sync + Send + 'static>,
     limit: Option<u64>,
     id: String,
