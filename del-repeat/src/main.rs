@@ -16,8 +16,8 @@ fn main() {
         let has_reapet = repeat::find_repeat_file(path.join(input_path.trim()));
         match has_reapet {
             Ok((reapet, result)) => {
-                println!("发现重复文件,已将文件列表写入 result.json");
                 if reapet {
+                    println!("发现重复文件,已将文件列表写入 result.json");
                     println!("是否进行删除操作? 输入Y/y/1,进行删除. 输入N/n取消删除,退出进程");
                     stdout().flush().expect("err");
                     let mut confirm = String::new();
