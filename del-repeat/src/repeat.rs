@@ -19,8 +19,8 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
     {
         let file_size = entry.metadata()?.len();
         let file_path = entry.path().display().to_string();
-        // If the same size exists, push path to map.
-        if file_map.get(&file_size).is_none() {
+        // 若存在同样的大小,push path到map
+        if !file_map.contains_key(&file_size) {
             let tem = vec![file_path];
             file_map.insert(file_size, tem);
         } else {
@@ -40,21 +40,24 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
 /// ### [result] 要删除的文件,以BTreeMap保存
 pub fn delete_repeat_file(mut result: BTreeMap<u64, Vec<String>>) {
     println!("{:#?}", result);
-    result.iter_mut().for_each(|res| {
-        if res.1.len() > 1 {
-            for i in 1..res.1.len() {
-                let path = res.1.get_mut(i).unwrap();
-                println!("删除重复文件:{:?}", &path);
-                let remove = remove_file(path);
-                match remove {
-                    Ok(_) => {
-                        println!("删除成功!")
+    let mut result_iter = result.iter_mut();
+    'file: loop {
+        if let Some((_size,path_list)) = result_iter.next(){
+            if path_list.len() > 1 {
+                let mut iter = path_list.iter_mut().skip(1);
+                'del: loop{
+                    if let Some(path) = iter.next(){
+                        println!("delete {:?}", path);
+                        let _ = remove_file(path);
+                    }else{
+                        break 'del;
                     }
-                    Err(err) => println!("删除失败:{:?}", err),
                 }
             }
+        }else { 
+            break 'file;
         }
-    });
+    }
 }
 
 #[cfg(test)]

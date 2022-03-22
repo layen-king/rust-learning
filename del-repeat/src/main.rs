@@ -14,19 +14,17 @@ fn main() {
         stdin().read_line(&mut confrim_path).expect("输入错误");
         let has_reapet = repeat::find_repeat_file(path.join(confrim_path.trim()));
         match has_reapet {
-            Ok((reapet,result)) => {
-                println!("发现重复文件,已将文件列表写入 result.json");
+            Ok((reapet, result)) => {
                 if reapet {
-                    println!(
-                        "是否进行删除操作? 输入Y/y/1,进行删除. 输入N/n取消删除,退出进程"
-                    );
+                    println!("发现重复文件,已将文件列表写入 result.json");
+                    println!("是否进行删除操作? 输入Y/y/1,进行删除. 输入N/n取消删除,退出进程");
                     stdout().flush().expect("err");
                     let mut confirm = String::new();
                     stdin().read_line(&mut confirm).expect("输入错误");
                     match confirm.trim() {
                         "Y" | "y" | "1" => {
                             repeat::delete_repeat_file(result);
-                            println!("删除完毕,进程即将退出!");
+                            println!("删除重复文件成功,即将退出");
                         }
                         _ => {
                             println!("不执行删除操作,进程即将退出");
@@ -41,13 +39,5 @@ fn main() {
                 println!("错误:{:?}", err)
             }
         }
-
-        // let args:Vec<String> = env::args().collect();
-        // let mut path = String::from("./");
-        // if !args.get(1).is_none() {
-        //   path = args.get(1).unwrap().to_string();
-        // }
-        // let result = repeat::find_repeat_file(path);
-        // println!("{:?}",result);
     }
 }
