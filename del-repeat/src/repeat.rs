@@ -39,22 +39,25 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
 /// ## 删除重复文件
 /// ### [result] 要删除的文件,以BTreeMap保存
 pub fn delete_repeat_file(mut result: BTreeMap<u64, Vec<String>>) {
-    println!("{:#?}", result);
     let mut result_iter = result.iter_mut();
     'file: loop {
-        if let Some((_size,path_list)) = result_iter.next(){
+        if let Some((_size, path_list)) = result_iter.next() {
             if path_list.len() > 1 {
                 let mut iter = path_list.iter_mut().skip(1);
-                'del: loop{
-                    if let Some(path) = iter.next(){
-                        println!("delete {:?}", path);
-                        let _ = remove_file(path);
-                    }else{
+                'del: loop {
+                    if let Some(path) = iter.next() {
+                        let remove_success = remove_file(&path);
+                        if remove_success.is_ok() {
+                            println!("delete successfully {:?}", &path);
+                        } else {
+                            println!("delete failed {:?}", &path);
+                        }
+                    } else {
                         break 'del;
                     }
                 }
             }
-        }else { 
+        } else {
             break 'file;
         }
     }
