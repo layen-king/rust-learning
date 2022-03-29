@@ -4,6 +4,7 @@ struct Point {
     y: f64,
 }
 
+#[allow(dead_code)]
 impl Point {
     fn origin() -> Point {
         Point { x: 0.0, y: 0.0 }
@@ -13,11 +14,12 @@ impl Point {
     }
 }
 
+#[allow(dead_code)]
 struct Rectangle {
     p1: Point,
     p2: Point,
 }
-
+#[allow(dead_code)]
 impl Rectangle {
     fn area(&self) -> f64 {
         let Point { x: x1, y: y1 } = self.p1;
@@ -26,9 +28,11 @@ impl Rectangle {
     }
 }
 
+#[allow(dead_code)]
 // `Pair` 拥有资源：两个堆分配的整型
 struct Pair(Box<i32>, Box<i32>);
 
+#[allow(dead_code)]
 impl Pair {
     // 这个方法会 “消耗” 调用者的资源
     // `self` 为 `self: Self` 的语法糖

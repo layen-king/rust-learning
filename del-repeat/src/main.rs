@@ -10,7 +10,7 @@ fn main() {
         let path = Path::new(&dir);
         println!("请输入要查找的路径:");
         stdout().flush().expect("输入错误");
-        let mut confrim_path= String::new();
+        let mut confrim_path = String::new();
         stdin().read_line(&mut confrim_path).expect("输入错误");
         let has_reapet = repeat::find_repeat_file(path.join(confrim_path.trim()));
         match has_reapet {
