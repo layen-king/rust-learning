@@ -2,7 +2,8 @@ use anyhow::Result;
 use std::net::TcpListener;
 mod make_headers;
 mod utils;
-mod leetcode;
+#[allow(unused_imports)]
+use leetcode;
 fn main() -> Result<()> {
     let listener = TcpListener::bind("127.0.0.1:3303")?;
     println!("http is listening on 127.0.0.1:3303");
