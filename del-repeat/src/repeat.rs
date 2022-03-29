@@ -26,7 +26,9 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
         } else {
             let tem = file_map.get_mut(&file_size).unwrap();
             tem.push(file_path);
-            has_reapet = true;
+            if !has_reapet {
+                has_reapet = true;
+            }
         }
     }
     let path = format!("{}/result.json", &path.display().to_string());

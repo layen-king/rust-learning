@@ -131,6 +131,8 @@ fn test() {
     event_emiter.once("hello1", t);
     event_emiter.emit("hello1", "abcd");
     event_emiter.emit("hello1", "abcde");
+    let str = "layen";
+    event_emiter.emit("hello",format!("{},version", str));
     println!("{}", event_emiter.get_count());
     event_emiter.emit("hello1", "abcde");
 }
