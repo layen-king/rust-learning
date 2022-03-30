@@ -58,10 +58,11 @@ impl MapSum {
     }
 }
 
-#[test]
-fn test_map_sum() {
-    let mp = MapSum.new();
-    mp.insert(String::from("app"), 3);
-    let res = map.sum(String::from("ap"));
-    println!("res is : {:?}", res);
-}
+// #[test]
+// fn test_map_sum() {
+//     use MapSum;
+//     let mp = MapSum.new();
+//     mp.insert(String::from("app"), 3);
+//     let res = map.sum(String::from("ap"));
+//     println!("res is : {:?}", res);
+// }

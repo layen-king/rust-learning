@@ -68,5 +68,5 @@ pub fn max_consecutive_answers(answer_key: String, k: i32) -> i32 {
 #[test]
 fn test_max_consecutive_answers() {
     let result = max_consecutive_answers(String::from("TTTTTFTT"), 1);
-    assert_eq!(result, 5)
+    assert_eq!(result, 51)
 }
