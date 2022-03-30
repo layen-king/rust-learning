@@ -74,6 +74,38 @@ pub fn max_consecutive_answers(answer_key: String, k: i32) -> i32 {
     ans as i32
 }
 
+
+
+pub fn max_consecutive_answers1(answer_key: String, k: i32) -> i32 {
+    let (mut ans, mut left, mut t, mut f) = (0, 0, 0, 0);
+    let chars = answer_key.as_bytes();
+    for (right, ch) in chars.iter().enumerate() {
+        match *ch {
+            b'T' => {
+                t = t + 1;
+            }
+            b'F' => {
+                f = f + 1;
+            }
+            _ => {}
+        }
+        if t > k && f > k {
+            match chars.get(left) {
+                Some(&b'T') => {
+                    t = t - 1;
+                }
+                Some(&b'F') => {
+                    f = f - 1;
+                }
+                _ => {}
+            }
+            left = left + 1;
+        }
+        ans = ans.max(right - left + 1);
+    }
+    ans as i32
+}
+
 #[test]
 fn test_max_consecutive_answers() {
     let result = max_consecutive_answers(String::from("TFTTTFTT"), 1);
