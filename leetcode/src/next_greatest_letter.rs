@@ -4,38 +4,38 @@
 
 /// ### 在比较时，字母是依序循环出现的。举个例子：
 
-/// ### 如果目标字母 target = 'z' 并且字符列表为 letters = ['a', 'b']，则答案返回 'a'
+/// ### 如果目标字母 target = 'z' 并且字符列表为 letters = \['a', 'b'\]，则答案返回 'a'
 /// ###
 
 /// ### 示例：
 
 /// ### 输入:
-/// ### letters = ["c", "f", "j"]
+/// ### letters = \["c", "f", "j"\]
 /// ### target = "a"
 /// ### 输出: "c"
 
 /// ### 输入:
-/// ### letters = ["c", "f", "j"]
+/// ### letters = \["c", "f", "j"\]
 /// ### target = "c"
 /// ### 输出: "f"
 
 /// ### 输入:
-/// ### letters = ["c", "f", "j"]
+/// ### letters = \["c", "f", "j"\]
 /// ### target = "d"
 /// ### 输出: "f"
 
 /// ### 输入:
-/// ### letters = ["c", "f", "j"]
+/// ### letters = \["c", "f", "j"\]
 /// ### target = "g"
 /// ### 输出: "j"
 
 /// ### 输入:
-/// ### letters = ["c", "f", "j"]
+/// ### letters = \["c", "f", "j"\]
 /// ### target = "j"
 /// ### 输出: "c"
 
 /// ### 输入:
-/// ### letters = ["c", "f", "j"]
+/// ### letters = \["c", "f", "j"\]
 /// ### target = "k"
 /// ### 输出: "c"
 pub fn next_greatest_letter(letters: Vec<char>, target: char) -> char {

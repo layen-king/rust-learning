@@ -12,17 +12,17 @@ use std::collections::HashSet;
 /// ### 示例 1：
 
 /// ### 输入：s = "AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT"
-/// ### 输出：["AAAAACCCCC","CCCCCAAAAA"]
+/// ### 输出：\["AAAAACCCCC","CCCCCAAAAA"\]
 /// ### 示例 2：
 
 /// ### 输入：s = "AAAAAAAAAAAAA"
-/// ### 输出：["AAAAAAAAAA"]
+/// ### 输出：\["AAAAAAAAAA"\]
 /// ###
 
 /// ### 提示：
 
 /// ### 0 <= s.length <= 105
-/// ### s[i] 为 'A'、'C'、'G' 或 'T'
+/// ### s\[i\] 为 'A'、'C'、'G' 或 'T'
 /// ### 通过次数46,188提交次数93,980
 
 /// ### 来源：力扣（LeetCode）

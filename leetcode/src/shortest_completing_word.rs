@@ -17,7 +17,7 @@
 
 /// ### 示例 1：
 
-/// ### 输入：licensePlate = "1s3 PSt", words = ["step", "steps", "stripe", "stepple"]
+/// ### 输入：licensePlate = "1s3 PSt", words = \["step", "steps", "stripe", "stepple"\]
 /// ### 输出："steps"
 /// ### 说明：最短补全词应该包括 "s"、"p"、"s" 以及 "t"。在匹配过程中我们忽略牌照中的大小写。
 /// ### "step" 包含 "t"、"p"，但只包含一个 "s"，所以它不符合条件。
@@ -27,20 +27,20 @@
 /// ### 因此，"steps" 是唯一一个包含所有字母的单词，也是本样例的答案。
 /// ### 示例 2：
 
-/// ### 输入：licensePlate = "1s3 456", words = ["looks", "pest", "stew", "show"]
+/// ### 输入：licensePlate = "1s3 456", words = \["looks", "pest", "stew", "show"\]
 /// ### 输出："pest"
 /// ### 说明：存在 3 个包含字母 "s" 且有着最短长度的补全词，"pest"、"stew"、和 "show" 三者长度相同，但我们返回最先出现的补全词 "pest" 。
 /// ### 示例 3：
 
-/// ### 输入：licensePlate = "Ah71752", words = ["suggest","letter","of","husband","easy","education","drug","prevent","writer","old"]
+/// ### 输入：licensePlate = "Ah71752", words = \["suggest","letter","of","husband","easy","education","drug","prevent","writer","old"\]
 /// ### 输出："husband"
 /// ### 示例 4：
 
-/// ### 输入：licensePlate = "OgEu755", words = ["enough","these","play","wide","wonder","box","arrive","money","tax","thus"]
+/// ### 输入：licensePlate = "OgEu755", words = \["enough","these","play","wide","wonder","box","arrive","money","tax","thus"\]
 /// ### 输出："enough"
 /// ### 示例 5：
 
-/// ### 输入：licensePlate = "iMSlpe4", words = ["claim","consumer","student","camera","public","never","wonder","simple","thought","use"]
+/// ### 输入：licensePlate = "iMSlpe4", words = \["claim","consumer","student","camera","public","never","wonder","simple","thought","use"\]
 /// ### 输出："simple"
 pub fn shortest_completing_word(license_plate: String, words: Vec<String>) -> String {
     let license = license_plate

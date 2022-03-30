@@ -39,8 +39,8 @@
 
 /// ### 来源：力扣（LeetCode）
 /// ### 链接：https://leetcode-cn.com/problems/valid-parentheses
-use std::collections::{HashMap, VecDeque};
 pub fn is_valid(s: String) -> bool {
+    use std::collections::{HashMap, VecDeque};
     if s.len() % 2 == 1 {
         return false;
     }

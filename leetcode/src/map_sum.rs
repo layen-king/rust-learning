@@ -10,10 +10,10 @@ use std::collections::HashMap;
 /// ### 示例：
 
 /// ### 输入：
-/// ### ["MapSum", "insert", "sum", "insert", "sum"]
+/// ### \["MapSum", "insert", "sum", "insert", "sum"\]
 /// ### [[], ["apple", 3], ["ap"], ["app", 2], ["ap"]]
 /// ### 输出：
-/// ### [null, null, 3, null, 5]
+/// ### \[null, null, 3, null, 5\]
 
 /// ### 解释：
 /// ### MapSum mapSum = new MapSum();
