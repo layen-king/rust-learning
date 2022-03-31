@@ -61,3 +61,4 @@ pub mod repeated_string_match;
 pub mod modify_string;
 pub mod minimum_difference;
 pub mod max_consecutive_answers;
+pub mod self_dividing_numbers;
