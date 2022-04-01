@@ -2,6 +2,7 @@ use std::convert::From;
 
 #[derive(Debug)]
 struct Number {
+    #[allow(dead_code)]
     value: i32,
 }
 
