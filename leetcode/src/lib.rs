@@ -63,3 +63,4 @@ pub mod minimum_difference;
 pub mod max_consecutive_answers;
 pub mod self_dividing_numbers;
 pub mod rotate_string;
+pub mod remove_nth_from_end;
