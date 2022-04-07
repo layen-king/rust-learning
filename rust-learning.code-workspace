@@ -4,5 +4,24 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"rust-analyzer.inlayHints.chainingHints": true,
+		"rust-analyzer.diagnostics.disabled": ["inactive-code"],
+		"rust-analyzer.diagnostics.enableExperimental": false,
+		"rust-analyzer.updates.channel": "nightly",
+		"rust-analyzer.procMacro.enable": true,
+		"rust-analyzer.inlayHints.refreshOnInsertMode": false,
+		"rust-analyzer.updates.prompt": false,
+		"rust-analyzer.checkOnSave.enable": true,
+		"rust-analyzer.cargo.loadOutDirsFromCheck": true,
+		"rust-analyzer.lens.enable": true,
+		"rust-analyzer.lens.run": true,
+		"rust-analyzer.lens.methodReferences": true,
+		"rust-analyzer.hoverActions.linksInHover": true,
+		"rust-analyzer.lens.implementations": true,
+		"rust-analyzer.completion.postfix.enable": true,
+		"rust-client.channel": null,
+		"rust-analyzer.trace.extension": true,
+		//"rust-analyzer.server.path": "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rust-analyzer"
+	}
 }
