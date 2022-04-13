@@ -70,7 +70,7 @@ impl RandomizedSet {
         self.nums.push(val);
         true
     }
-
+    #[allow(dead_code)]
     fn remove(&mut self, val: i32) -> bool {
         if let Some(index) = self.maps.get(&val) {
             let &last = self.nums.last().unwrap();
