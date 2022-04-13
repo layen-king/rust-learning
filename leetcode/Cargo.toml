@@ -9,3 +9,4 @@ version = "0.1.0"
 [dependencies]
 num = "0.4"
 regex = "1.5.4"
+rand = "0.8.5"

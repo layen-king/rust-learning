@@ -66,3 +66,4 @@ pub mod rotate_string;
 pub mod remove_nth_from_end;
 pub mod count_numbers_with_unique_digits;
 pub mod swap_pairs;
+pub mod randomi_zed_set;
