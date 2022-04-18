@@ -68,3 +68,4 @@ pub mod count_numbers_with_unique_digits;
 pub mod swap_pairs;
 pub mod randomi_zed_set;
 pub mod maximum_wealth;
+pub mod lexical_order;
