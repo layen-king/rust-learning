@@ -38,10 +38,13 @@
 /// ### 链接：https://leetcode-cn.com/problems/goat-latin
 /// ### 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 pub fn to_goat_latin(sentence: String) -> String {
+    use std::collections::HashSet;
     let mut words = sentence.split_whitespace();
     let mut res = String::new();
     let mut a = String::from("a");
-    let owels = vec!['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'];
+    let owels = ['a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U']
+        .iter()
+        .collect::<HashSet<_>>();
     loop {
         if let Some(word) = words.next() {
             let c = word.as_bytes()[0] as char;
