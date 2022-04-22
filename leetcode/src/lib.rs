@@ -73,3 +73,4 @@ pub mod lexical_order;
 pub mod remove_element;
 pub mod shortest_to_char;
 pub mod to_goat_latin;
+pub mod max_rotate_function;
