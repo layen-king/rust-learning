@@ -76,3 +76,4 @@ pub mod to_goat_latin;
 pub mod max_rotate_function;
 pub mod binary_gap;
 pub mod find_substring;
+pub mod solution;
