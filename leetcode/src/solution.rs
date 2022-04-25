@@ -56,6 +56,29 @@ impl Solution {
     }
 }
 
+pub struct SolutionSampling {
+    pub nums: Vec<i32>,
+}
+
+impl SolutionSampling {
+    pub fn new(nums: Vec<i32>) -> Self {
+        SolutionSampling { nums }
+    }
+
+    pub fn pick(&self, target: i32) -> i32 {
+        let (mut res, mut count) = (0, 0);
+        for i in 0..self.nums.len() {
+            if target == self.nums[i] {
+                count += 1;
+                if rand::random::<usize>() % count == 0 {
+                    res = i
+                }
+            }
+        }
+        res as i32
+    }
+}
+
 #[test]
 fn test_solution() {
     let solution = Solution::new(vec![1, 2, 3, 3, 3]);
