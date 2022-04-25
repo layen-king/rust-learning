@@ -64,7 +64,7 @@ impl SolutionSampling {
     pub fn new(nums: Vec<i32>) -> Self {
         SolutionSampling { nums }
     }
-
+    /// 水塘抽样
     pub fn pick(&self, target: i32) -> i32 {
         let (mut res, mut count) = (0, 0);
         for i in 0..self.nums.len() {
