@@ -77,3 +77,4 @@ pub mod max_rotate_function;
 pub mod binary_gap;
 pub mod find_substring;
 pub mod solution;
+pub mod sort_array_by_parity;
