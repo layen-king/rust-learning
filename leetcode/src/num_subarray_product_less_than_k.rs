@@ -43,5 +43,5 @@ pub fn num_subarray_product_less_than_k(nums: Vec<i32>, k: i32) -> i32 {
 #[test]
 fn test_num_subarray_product_less_than_k() {
     let result = num_subarray_product_less_than_k(vec![10, 5, 2, 6], 100);
-    assert_eq!(result, 6)
+    assert_eq!(result, 8)
 }
