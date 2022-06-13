@@ -4,6 +4,8 @@ mod make_headers;
 mod utils;
 #[allow(unused_imports)]
 use leetcode;
+#[allow(unused_imports)]
+use rust_course;
 fn main() -> Result<()> {
     let listener = TcpListener::bind("127.0.0.1:3303")?;
     println!("http is listening on 127.0.0.1:3303");
