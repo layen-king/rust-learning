@@ -7,7 +7,8 @@ use leetcode;
 #[allow(unused_imports)]
 use rust_course;
 fn main() -> Result<()> {
-    rust_course::rust_course::start();
+    rust_course::async_start::start();
+    rust_course::async_start::async_start();
     let listener = TcpListener::bind("127.0.0.1:3303")?;
     println!("http is listening on 127.0.0.1:3303");
     for stream in listener.incoming() {
