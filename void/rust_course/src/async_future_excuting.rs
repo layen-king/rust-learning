@@ -83,16 +83,16 @@ struct Task {
 }
 
 // 任务执行器
-struct Executor {
+pub struct Executor {
     ready_queue: Receiver<Arc<Task>>,
 }
 
 #[derive(Clone)]
-struct Spawner {
+pub struct Spawner {
     task_sender: SyncSender<Arc<Task>>,
 }
 
-fn new_executor_and_spawn() -> (Executor, Spawner) {
+pub fn new_executor_and_spawn() -> (Executor, Spawner) {
     // 任务通道允许的最大缓冲数(任务队列的最大长度)
     // 当前的实现仅仅是为了简单，在实际的执行中，并不会这么使用
     const MAX_QUEUED_TASKS: usize = 10_000;
@@ -137,4 +137,16 @@ impl Executor {
             }
         }
     }
+}
+
+/// 测试
+pub fn test_execute_and_spwan() {
+    let (executor, spawner) = new_executor_and_spawn();
+    spawner.spawn(async {
+        println!("howdy!");
+        TimerFuture::new(Duration::new(20, 0)).await;
+        println!("done!")
+    });
+    drop(spawner);
+    executor.run();
 }

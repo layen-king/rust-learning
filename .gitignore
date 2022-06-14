@@ -3,3 +3,4 @@
 */target
 *.lock
 *.json
+void/rust_course/target/*
