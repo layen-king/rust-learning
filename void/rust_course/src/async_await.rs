@@ -1,4 +1,9 @@
-use futures::{Future, executor::block_on};
+use std::{
+    pin::Pin,
+    task::{Context, Poll},
+};
+
+use futures::{executor::block_on, Future, SinkExt, StreamExt, channel::mpsc};
 
 // `foo()`返回一个`Future<Output = u8>`,
 // 当调用`foo().await`时，该`Future`将被运行，当调用结束后我们将获取到一个`u8`值
@@ -64,6 +69,42 @@ async fn block() {
     let ((), ()) = futures::join!(f1, f2);
 }
 /// 触发future
-pub fn start(){
-  block_on(block());
+pub fn start() {
+    block_on(block());
+}
+
+// 当.await 遇见多线程执行器
+// 需要注意的是，当使用多线程 Future 执行器( executor )时， Future 可能会在线程间被移动，因此 async 语句块中的变量必须要能在线程间传递。 至于 Future 会在线程间移动的原因是：它内部的任何.await都可能导致它被切换到一个新线程上去执行。
+
+// 由于需要在多线程环境使用，意味着 Rc、 RefCell 、没有实现 Send 的所有权类型、没有实现 Sync 的引用类型，它们都是不安全的，因此无法被使用
+
+// 需要注意！实际上它们还是有可能被使用的，只要在 .await 调用期间，它们没有在作用域范围内。
+
+// 类似的原因，在 .await 时使用普通的锁也不安全，例如 Mutex 。原因是，它可能会导致线程池被锁：当一个任务获取锁 A 后，若它将线程的控制权还给执行器，然后执行器又调度运行另一个任务，该任务也去尝试获取了锁 A ，结果当前线程会直接卡死，最终陷入死锁中。
+
+// 因此，为了避免这种情况的发生，我们需要使用 futures 包下的锁 futures::lock 来替代 Mutex 完成任务。
+
+trait Stream {
+    // Stream生成的值的类型
+    type Item;
+    // 尝试去解析Stream中的下一个值,
+    // 若无数据，返回`Poll::Pending`, 若有数据，返回 `Poll::Ready(Some(x))`, `Stream`完成则返回 `Poll::Ready(None)`
+    fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>>;
+}
+
+// 关于 Stream 的一个常见例子是消息通道（ futures 包中的）的消费者 Receiver。
+// 每次有消息从 Send 端发送后，它都可以接收到一个 Some(val) 值，
+//  一旦 Send 端关闭(drop)，且消息通道中没有消息后，它会接收到一个 None 值。
+#[allow(dead_code)]
+async fn send_recv() {
+    const BUFFER_SIZE: usize = 10;
+    let (mut tx, mut rx) = mpsc::channel::<i32>(BUFFER_SIZE);
+    tx.send(1).await.unwrap();
+    tx.send(2).await.unwrap();
+    drop(tx);
+    // `StreamExt::next` 类似于 `Iterator::next`, 但是前者返回的不是值，而是一个 `Future<Output = Option<T>>`，
+    // 因此还需要使用`.await`来获取具体的值
+    assert_eq!(Some(1), rx.next().await);
+    assert_eq!(Some(2), rx.next().await);
+    assert_eq!(None, rx.next().await);
 }
