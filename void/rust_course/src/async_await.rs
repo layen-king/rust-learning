@@ -3,7 +3,7 @@ use std::{
     task::{Context, Poll},
 };
 
-use futures::{executor::block_on, Future, SinkExt, StreamExt, channel::mpsc};
+use futures::{channel::mpsc, executor::block_on, io, Future, SinkExt, StreamExt};
 
 // `foo()`返回一个`Future<Output = u8>`,
 // 当调用`foo().await`时，该`Future`将被运行，当调用结束后我们将获取到一个`u8`值
@@ -108,3 +108,48 @@ async fn send_recv() {
     assert_eq!(Some(2), rx.next().await);
     assert_eq!(None, rx.next().await);
 }
+
+// 迭代和并发
+// 跟迭代器类似，我们也可以迭代一个 Stream。
+// 例如使用map，filter，fold方法，以及它们的遇到错误提前返回的版本： try_map，try_filter，try_fold。
+
+// 但是跟迭代器又有所不同，
+// for 循环无法在这里使用，但是命令式风格的循环while let是可以用的，同时还可以使用next 和 try_next 方法:
+// async fn sum_with_next(mut stream: Pin<&mut dyn Stream<Item = i32>>) -> i32 {
+//   use futures::stream::StreamExt; // 引入 next // 方法存在问题
+//   let mut sum = 0;
+//   while let Some(item) = stream.next().await {
+//       sum += item;
+//   }
+//   sum
+// }
+// try_next异步处理流 ,同样存在try_next错误
+// async fn sum_with_try_next(
+//     mut stream: Pin<&mut dyn Stream<Item = Result<i32, io::Error>>>,
+// ) -> Result<i32, io::Error> {
+//     use futures::stream::TryStreamExt;
+//     let mut sum = 0;
+//     while let Some(value) = stream.try_next().await? {
+//         sum += value;
+//     }
+//     Ok(sum)
+// }
+
+// 上面代码是一次处理一个值的模式，但是需要注意的是：
+// 如果你选择一次处理一个值的模式，可能会造成无法并发，这就失去了异步编程的意义。
+//  因此，如果可以的话我们还是要选择从一个 Stream 并发处理多个值的方式，通过 for_each_concurrent 或 try_for_each_concurrent 方法来实现:
+// 使用并发处理stream 存在函数引入错误
+// async fn jump_around(
+//     mut stream: Pin<&mut dyn Stream<Item = Result<u8, io::Error>>>,
+// ) -> Result<(), io::Error> {
+//     use futures::stream::TryStreamExt;
+//     const MAX_CURRENT_JUMPERS: usize = 100;
+//     stream
+//         .try_for_each_concurrent(MAX_CURRENT_JUMPERS, |nums| async move {
+//             jump_n_times(nums).await?;
+//             report_n_jumpers(nums).await?;
+//             Ok(())
+//         })
+//         .await?;
+//     Ok(())
+// }
