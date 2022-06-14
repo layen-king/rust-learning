@@ -10,6 +10,7 @@ fn main() -> Result<()> {
     rust_course::async_start::start();
     rust_course::async_start::async_start();
     rust_course::async_future_excuting::test_execute_and_spwan();
+    rust_course::async_await::start();
     let listener = TcpListener::bind("127.0.0.1:3303")?;
     println!("http is listening on 127.0.0.1:3303");
     for stream in listener.incoming() {
