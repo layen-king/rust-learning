@@ -58,5 +58,3 @@ pub fn shortest_to_char(s: String, c: char) -> Vec<i32> {
     res
 }
 
-#[test]
-fn test_shortest_to_char(s: String, c: char) -> Vec<i32> {}

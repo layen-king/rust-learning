@@ -80,3 +80,4 @@ pub mod solution;
 pub mod sort_array_by_parity;
 pub mod num_subarray_product_less_than_k;
 pub mod one_edit_away;
+pub mod magic_dictionary;
