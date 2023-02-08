@@ -1,8 +1,50 @@
 use std::collections::BTreeMap;
 use std::fs::{remove_file, File};
-use std::io::{Error, Write};
+use std::io::{stdin, stdout, Error, Write};
+use std::path::Path;
 use std::path::PathBuf;
 use walkdir::WalkDir;
+
+/// 询问用户
+pub fn ask_user() {
+    println!("欢迎使用重复文件查找");
+    loop {
+        println!("当前路径:{:?}", std::env::current_dir().unwrap());
+        let dir = std::env::current_dir().unwrap();
+        let path = Path::new(&dir);
+        println!("请输入要查找的路径:");
+        stdout().flush().expect("输入错误");
+        let mut confirm_path = String::new();
+        stdin().read_line(&mut confirm_path).expect("输入错误");
+        let has_repeat = find_repeat_file(path.join(confirm_path.trim()));
+        match has_repeat {
+            Ok((repeat, result)) => {
+                if repeat {
+                    println!("发现重复文件,已将文件列表写入 result.json");
+                    println!("是否进行删除操作? 输入Y/y/1,进行删除. 输入N/n取消删除,退出进程");
+                    stdout().flush().expect("err");
+                    let mut confirm = String::new();
+                    stdin().read_line(&mut confirm).expect("输入错误");
+                    match confirm.trim() {
+                        "Y" | "y" | "1" => {
+                            delete_repeat_file(result);
+                            println!("删除重复文件成功,即将退出");
+                        }
+                        _ => {
+                            println!("不执行删除操作,进程即将退出");
+                        }
+                    }
+                    break;
+                } else {
+                    println!("未发现重复文件")
+                }
+            }
+            Err(err) => {
+                println!("错误:{:?}", err)
+            }
+        }
+    }
+}
 
 /// ## 查找重复文件并且输出
 /// ### [path] 要查询的文件路径
@@ -10,7 +52,7 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
     println!("读取路径文件:{:?}", path);
     let mut file_map = BTreeMap::new();
 
-    let mut has_reapet = false;
+    let mut has_repeat = false;
 
     for entry in WalkDir::new(&path)
         .into_iter()
@@ -26,8 +68,8 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
         } else {
             let tem = file_map.get_mut(&file_size).unwrap();
             tem.push(file_path);
-            if !has_reapet {
-                has_reapet = true;
+            if !has_repeat {
+                has_repeat = true;
             }
         }
     }
@@ -35,7 +77,7 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(bool, BTreeMap<u64, Vec<String
     let mut output = File::create(path)?;
     let str = String::from(format!("{:?}", file_map));
     write!(output, "{}", str)?;
-    Ok((has_reapet, file_map))
+    Ok((has_repeat, file_map))
 }
 
 /// ## 删除重复文件
