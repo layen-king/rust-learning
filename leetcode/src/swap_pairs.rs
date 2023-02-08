@@ -46,6 +46,7 @@ pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
     // 迭代方法
     let mut dummy_node = Box::new(ListNode::new(0));
     let mut tem = &mut dummy_node;
+    #[allow(unused)]
     let mut nxt_nxt = None;
     while let Some(mut head_node) = head {
         let nxt = head_node.next.take();

@@ -3,6 +3,7 @@ use std::{
     task::{Context, Poll},
 };
 
+#[allow(unused)]
 use futures::{channel::mpsc, executor::block_on, io, Future, SinkExt, StreamExt};
 
 // `foo()`返回一个`Future<Output = u8>`,

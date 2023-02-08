@@ -44,17 +44,19 @@
 /// ### 链接：https://leetcode.cn/problems/implement-magic-dictionary
 /// ### 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
 pub struct MagicDictionary {
+    #[allow(unused)]
     map: Vec<String>,
 }
 impl MagicDictionary {
+    #[allow(unused)]
     fn new() -> Self {
         MagicDictionary { map: vec![] }
     }
-
+    #[allow(unused)]
     fn build_dict(&mut self, dictionary: Vec<String>) {
         self.map.extend(dictionary);
     }
-
+    #[allow(unused)]
     fn search(&self, search_word: String) -> bool {
         for str in self.map.iter() {
             if str.len() != search_word.len() {
