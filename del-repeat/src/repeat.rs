@@ -66,15 +66,20 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(u128, bool, BTreeMap<u64, Vec<
         let file_size = entry.metadata()?.len();
         let file_path = entry.path().display().to_string();
         // 若存在同样的大小,push path到map
-        if !file_map.contains_key(&file_size) {
-            let tem = vec![file_path];
-            file_map.insert(file_size, tem);
-        } else {
-            let tem = file_map.get_mut(&file_size).unwrap();
-            tem.push(file_path);
-            if !has_repeat {
-                has_repeat = true;
-            }
+        // if !file_map.contains_key(&file_size) {
+        //     let tem = vec![file_path];
+        //     file_map.insert(file_size, tem);
+        // } else {
+        //     let tem = file_map.get_mut(&file_size).unwrap();
+        //     tem.push(file_path);
+        //     if !has_repeat {
+        //         has_repeat = true;
+        //     }
+        // }
+        let tem = file_map.entry(file_size).or_insert_with(Vec::new);
+        tem.push(file_path);
+        if !has_repeat && tem.len() > 1 {
+            has_repeat = true;
         }
     }
     let path = format!("{}/result.json", &path.display().to_string());

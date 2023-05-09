@@ -22,7 +22,7 @@
     "rust-analyzer.diagnostics.experimental.enable": false,
     "rust-analyzer.hover.links.enable": true,
     "rust-analyzer.inlayHints.chainingHints.enable": true,
-    "cSpell.words": ["bufstream", "emiter", "excuting", "hhllo", "layen", "leetcode", "leetcoded", "nums", "rustup", "serde", "spwan", "thiserror", "walkdir"]
+    "cSpell.words": ["bincode", "bufstream", "emiter", "excuting", "hhllo", "layen", "leetcode", "leetcoded", "nums", "rustup", "serde", "spwan", "thiserror", "walkdir"]
     //"rust-analyzer.server.path": "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/bin/rust-analyzer"
   }
 }
