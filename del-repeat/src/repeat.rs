@@ -1,9 +1,14 @@
+use serde::Serialize;
+use serde_json;
 use std::collections::BTreeMap;
 use std::fs::{remove_file, File};
 use std::io::{stdin, stdout, Error, Write};
 use std::path::Path;
 use std::path::PathBuf;
 use walkdir::WalkDir;
+
+#[derive(Serialize)]
+struct FileMap(BTreeMap<u64, Vec<String>>);
 
 /// 询问用户
 pub fn ask_user() {
@@ -82,39 +87,50 @@ pub fn find_repeat_file(path: PathBuf) -> Result<(u128, bool, BTreeMap<u64, Vec<
             has_repeat = true;
         }
     }
+    let file_map = FileMap(file_map);
     let path = format!("{}/result.json", &path.display().to_string());
     let mut output = File::create(path)?;
-    let str = String::from(format!("{:?}", file_map));
-    write!(output, "{}", str)?;
-    Ok((count, has_repeat, file_map))
+    let serialized = serde_json::to_string(&file_map).unwrap();
+    write!(output, "{}", serialized)?;
+    Ok((count, has_repeat, file_map.0))
 }
 
 /// ## 删除重复文件
 /// ### [result] 要删除的文件,以BTreeMap保存
-pub fn delete_repeat_file(mut result: BTreeMap<u64, Vec<String>>) {
-    let mut result_iter = result.iter_mut();
-    'file: loop {
-        if let Some((_size, path_list)) = result_iter.next() {
-            if path_list.len() > 1 {
-                let mut iter = path_list.iter_mut().skip(1);
-                'del: loop {
-                    if let Some(path) = iter.next() {
-                        let remove_success = remove_file(&path);
-                        if remove_success.is_ok() {
-                            println!("delete successfully {:?}", &path);
-                        } else {
-                            println!("delete failed {:?}", &path);
-                        }
-                    } else {
-                        break 'del;
-                    }
-                }
+pub fn delete_repeat_file(result: BTreeMap<u64, Vec<String>>) {
+    for (_size, path_list) in result {
+        for path in path_list.iter().skip(1) {
+            match remove_file(&path) {
+                Ok(_) => println!("delete successfully {:?}", &path),
+                Err(e) => println!("delete failed {:?}, error: {:?}", &path, e),
             }
-        } else {
-            break 'file;
         }
     }
 }
+// pub fn delete_repeat_file(mut result: BTreeMap<u64, Vec<String>>) {
+//     let mut result_iter = result.iter_mut();
+//     'file: loop {
+//         if let Some((_size, path_list)) = result_iter.next() {
+//             if path_list.len() > 1 {
+//                 let mut iter = path_list.iter_mut().skip(1);
+//                 'del: loop {
+//                     if let Some(path) = iter.next() {
+//                         let remove_success = remove_file(&path);
+//                         if remove_success.is_ok() {
+//                             println!("delete successfully {:?}", &path);
+//                         } else {
+//                             println!("delete failed {:?}", &path);
+//                         }
+//                     } else {
+//                         break 'del;
+//                     }
+//                 }
+//             }
+//         } else {
+//             break 'file;
+//         }
+//     }
+// }
 
 #[cfg(test)]
 mod tests {
